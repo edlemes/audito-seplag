@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { AvaliacaoFeedback } from "@/types/agendamento";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ratingLabels = [
   { key: "notaGeral" as const, label: "Experiência Geral" },
@@ -28,6 +30,7 @@ const StarRating = ({ value, onChange }: { value: number; onChange: (v: number) 
 );
 
 const FeedbackForm = () => {
+  const { user } = useAuth();
   const [data, setData] = useState<AvaliacaoFeedback>({
     notaGeral: 0,
     notaInfraestrutura: 0,
@@ -37,13 +40,28 @@ const FeedbackForm = () => {
     sugestao: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (data.notaGeral === 0) {
       toast.error("Por favor, informe ao menos a nota geral.");
       return;
     }
-    console.log("Feedback:", data);
+
+    const { error } = await supabase.from("feedback_usuario").insert({
+      user_id: user?.id || null,
+      nota_geral: data.notaGeral,
+      nota_infraestrutura: data.notaInfraestrutura || null,
+      nota_atendimento: data.notaAtendimento || null,
+      nota_equipamentos: data.notaEquipamentos || null,
+      comentario: data.comentario || null,
+      sugestao: data.sugestao || null,
+    });
+
+    if (error) {
+      console.error(error);
+      toast.error("Erro ao enviar avaliação. Faça login primeiro.");
+      return;
+    }
     toast.success("Avaliação enviada com sucesso! Obrigado pelo seu feedback.");
     setData({ notaGeral: 0, notaInfraestrutura: 0, notaAtendimento: 0, notaEquipamentos: 0, comentario: "", sugestao: "" });
   };
