@@ -27,19 +27,21 @@ const GestaoUsuarios = () => {
 
   const handleCreate = async () => {
     if (!newEmail || !newPassword || !newName) { toast.error("Preencha todos os campos."); return; }
+    if (newPassword.length < 6) { toast.error("A senha deve ter pelo menos 6 caracteres."); return; }
 
-    const { data, error } = await supabase.auth.signUp({
-      email: newEmail,
-      password: newPassword,
-      options: { data: { display_name: newName } },
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke("create-admin", {
+        body: { email: newEmail, password: newPassword, role: newRole, display_name: newName },
+      });
 
-    if (error) { toast.error(error.message); return; }
-    if (data.user) {
-      await supabase.from("user_roles").insert({ user_id: data.user.id, role: newRole as any });
+      if (error) { toast.error("Erro ao criar usuário."); return; }
+      if (data?.error) { toast.error(data.error); return; }
+
       toast.success("Usuário criado com sucesso!");
       setNewEmail(""); setNewPassword(""); setNewName("");
       loadUsers();
+    } catch {
+      toast.error("Erro ao criar usuário.");
     }
   };
 
