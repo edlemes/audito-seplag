@@ -112,3 +112,31 @@
   --primary: 60 100% 50%;
   --primary-foreground: 0 0% 0%;
 }
+
+/* Splash Screen — CSS-only, zero JS overhead */
+.splash-bg {
+  background: linear-gradient(135deg, hsl(212 100% 8%), hsl(212 100% 18%), hsl(212 80% 28%));
+}
+
+.splash-title {
+  color: #fff;
+  text-shadow:
+    0 0 6px hsl(212 100% 60%),
+    0 0 20px hsl(212 100% 50%),
+    0 0 40px hsl(212 100% 40%),
+    0 0 80px hsl(212 100% 30%);
+  animation: splash-glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes splash-glow {
+  from { text-shadow: 0 0 6px hsl(212 100% 60%), 0 0 20px hsl(212 100% 50%), 0 0 40px hsl(212 100% 40%); }
+  to   { text-shadow: 0 0 10px hsl(212 100% 70%), 0 0 30px hsl(212 100% 60%), 0 0 60px hsl(212 100% 50%), 0 0 100px hsl(212 100% 40%); }
+}
+
+.splash-line {
+  width: 60%;
+  max-width: 400px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(212 100% 60%), transparent);
+  box-shadow: 0 0 12px hsl(212 100% 50%);
+}
