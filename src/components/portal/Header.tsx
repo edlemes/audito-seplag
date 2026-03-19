@@ -1,12 +1,27 @@
 import { Building2, Menu, X, LogIn } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const location = useLocation();
   const { user, isAdmin, isReadonly } = useAuth();
+
+  useEffect(() => {
+    supabase
+      .from("cms_content")
+      .select("imagem_url")
+      .eq("tipo", "logo")
+      .eq("ativo", true)
+      .limit(1)
+      .single()
+      .then(({ data }) => {
+        if (data) setLogoUrl(data.imagem_url);
+      });
+  }, []);
 
   const navItems = [
     { label: "Início", path: "/" },
@@ -20,9 +35,13 @@ const Header = () => {
     <header className="seplag-gradient sticky top-0 z-50 shadow-lg">
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-            <Building2 className="h-6 w-6 text-secondary-foreground" />
-          </div>
+          {logoUrl ? (
+            <img src={logoUrl} alt="Logo" className="h-10 w-10 rounded-lg object-contain" />
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+              <Building2 className="h-6 w-6 text-secondary-foreground" />
+            </div>
+          )}
           <div>
             <h1 className="text-lg font-bold leading-tight text-primary-foreground">
               Portal do Auditório
