@@ -1,118 +1,18 @@
-import { useState } from "react";
-import { MessageCircle, Accessibility, Plus, Minus, Eye, Type, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle } from "lucide-react";
 
 const WHATSAPP_NUMBER = "556596886670";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20audit%C3%B3rio.`;
 
-const FloatingButtons = () => {
-  const [a11yOpen, setA11yOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(100);
-  const [highContrast, setHighContrast] = useState(false);
-
-  const changeFontSize = (delta: number) => {
-    const next = Math.max(80, Math.min(150, fontSize + delta));
-    setFontSize(next);
-    document.documentElement.style.fontSize = `${next}%`;
-  };
-
-  const toggleContrast = () => {
-    setHighContrast(!highContrast);
-    document.documentElement.classList.toggle("high-contrast");
-  };
-
-  return (
-    <>
-      {/* Accessibility — middle right */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col items-end gap-2">
-        <AnimatePresence>
-          {a11yOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: 10, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 10, scale: 0.9 }}
-              className="mb-2 flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-lg min-w-[180px]"
-            >
-              <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-                Acessibilidade
-              </p>
-
-              {/* Font size */}
-              <div className="flex flex-col gap-1">
-                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Type className="h-3.5 w-3.5" /> Tamanho da fonte
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => changeFontSize(-10)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground"
-                    aria-label="Diminuir fonte"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <span className="min-w-[3ch] text-center text-sm font-semibold text-foreground">
-                    {fontSize}%
-                  </span>
-                  <button
-                    onClick={() => changeFontSize(10)}
-                    className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground"
-                    aria-label="Aumentar fonte"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* High contrast */}
-              <button
-                onClick={toggleContrast}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
-                  highContrast
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
-                }`}
-              >
-                <Eye className="h-4 w-4" />
-                Alto Contraste
-              </button>
-
-              {/* Reset */}
-              {(fontSize !== 100 || highContrast) && (
-                <button
-                  onClick={() => {
-                    setFontSize(100);
-                    document.documentElement.style.fontSize = "100%";
-                    if (highContrast) toggleContrast();
-                  }}
-                  className="text-xs text-muted-foreground underline hover:text-foreground transition"
-                >
-                  Restaurar padrão
-                </button>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <button
-          onClick={() => setA11yOpen(!a11yOpen)}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition hover:bg-primary/90"
-          aria-label="Menu de acessibilidade"
-        >
-          {a11yOpen ? <X className="h-5 w-5" /> : <Accessibility className="h-5 w-5" />}
-        </button>
-      </div>
-
-      {/* WhatsApp — bottom right */}
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:bg-[#20bd5a]"
-        aria-label="Contato pelo WhatsApp"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </a>
-    </>
-  );
-};
+const FloatingButtons = () => (
+  <a
+    href={WHATSAPP_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:bg-[#20bd5a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+    aria-label="Contato pelo WhatsApp"
+  >
+    <MessageCircle className="h-6 w-6" />
+  </a>
+);
 
 export default FloatingButtons;
