@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/portal/Header";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ClipboardCheck, FileText, Download } from "lucide-react";
+import { ClipboardCheck, FileText, Download, Camera, X, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 
@@ -27,6 +27,12 @@ const itensVistoria = [
 const statusLabels: Record<StatusItem, string> = { bom: "Bom", manutencao: "Manutenção", ajuste: "Ajuste" };
 const statusColors: Record<StatusItem, string> = { bom: "bg-success/10 text-success", manutencao: "bg-destructive/10 text-destructive", ajuste: "bg-warning/10 text-warning" };
 
+interface PhotoItem {
+  file: File;
+  preview: string;
+  label: string;
+}
+
 const Vistoria = () => {
   const { user, isAdmin } = useAuth();
   const [tipoVistoria, setTipoVistoria] = useState<string>("pre_evento");
@@ -37,6 +43,9 @@ const Vistoria = () => {
     Object.fromEntries(itensVistoria.map((i) => [i.key, "bom"])) as Record<string, StatusItem>
   );
   const [historico, setHistorico] = useState<any[]>([]);
+  const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadSolicitacoes();
@@ -53,24 +62,62 @@ const Vistoria = () => {
     setHistorico(data || []);
   };
 
+  const handlePhotoAdd = (files: FileList | null) => {
+    if (!files) return;
+    const newPhotos: PhotoItem[] = [];
+    Array.from(files).forEach((file) => {
+      if (file.size > 5 * 1024 * 1024) { toast.error(`${file.name} excede 5MB`); return; }
+      newPhotos.push({ file, preview: URL.createObjectURL(file), label: file.name.split(".")[0] });
+    });
+    setPhotos((prev) => [...prev, ...newPhotos]);
+  };
+
+  const removePhoto = (index: number) => {
+    setPhotos((prev) => {
+      URL.revokeObjectURL(prev[index].preview);
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const uploadPhotos = async (): Promise<string[]> => {
+    const urls: string[] = [];
+    for (const photo of photos) {
+      const ext = photo.file.name.split(".").pop();
+      const path = `vistoria/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("cms-media").upload(path, photo.file);
+      if (error) { console.error("[Vistoria] Upload failed:", error.message); continue; }
+      const { data } = supabase.storage.from("cms-media").getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+    return urls;
+  };
+
   const handleSubmit = async () => {
     if (!user) return;
+    
+    let photoUrls: string[] = [];
+    if (photos.length > 0) {
+      toast.info("Enviando fotos...");
+      photoUrls = await uploadPhotos();
+    }
+
     const { error } = await supabase.from("vistoria_equipamentos").insert({
       solicitacao_id: solicitacaoId || null,
       inspector_id: user.id,
       tipo_vistoria: tipoVistoria,
-      observacoes,
+      observacoes: observacoes + (photoUrls.length > 0 ? `\n\n[FOTOS]\n${photoUrls.join("\n")}` : ""),
       ...items,
     } as any);
     if (error) { toast.error("Erro ao salvar vistoria."); console.error('[Vistoria] Save failed:', error?.code ?? 'unknown'); return; }
     toast.success("Vistoria registrada com sucesso!");
-    generatePDF();
+    generatePDF(photoUrls);
     setObservacoes("");
+    setPhotos([]);
     setItems(Object.fromEntries(itensVistoria.map((i) => [i.key, "bom"])) as Record<string, StatusItem>);
     loadHistorico();
   };
 
-  const generatePDF = () => {
+  const generatePDF = async (photoUrls: string[] = []) => {
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
@@ -136,7 +183,27 @@ const Vistoria = () => {
       y += lines.length * 5;
     }
 
-    y += 20;
+    // Photo URLs reference
+    if (photoUrls.length > 0) {
+      y += 10;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text(`Fotos Anexadas: ${photoUrls.length} arquivo(s)`, 20, y);
+      y += 6;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      photoUrls.forEach((url, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.setTextColor(0, 69, 135);
+        doc.text(`Foto ${i + 1}: ${url}`, 25, y);
+        y += 5;
+      });
+      doc.setTextColor(0);
+    }
+
+    y = Math.min(y + 20, 260);
+    if (y > 250) { doc.addPage(); y = 40; }
+    doc.setFontSize(10);
     doc.line(20, y, 90, y);
     doc.setFontSize(9);
     doc.text("Assinatura do Inspetor", 30, y + 5);
@@ -208,6 +275,45 @@ const Vistoria = () => {
               ))}
             </div>
 
+            {/* Photo upload section */}
+            <div className="mt-6 space-y-3">
+              <Label className="flex items-center gap-2">
+                <Camera className="h-4 w-4 text-primary" /> Fotos dos Equipamentos
+              </Label>
+              <div className="flex flex-wrap gap-3">
+                {photos.map((photo, i) => (
+                  <div key={i} className="group relative h-24 w-24 overflow-hidden rounded-lg border border-border">
+                    <img src={photo.preview} alt={photo.label} className="h-full w-full object-cover" />
+                    <button
+                      onClick={() => removePhoto(i)}
+                      className="absolute right-1 top-1 rounded-full bg-destructive p-1 text-destructive-foreground opacity-0 transition group-hover:opacity-100"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => cameraInputRef.current?.click()}
+                    className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border text-muted-foreground transition hover:border-primary hover:text-primary"
+                  >
+                    <Camera className="h-6 w-6" />
+                    <span className="text-[10px]">Câmera</span>
+                  </button>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed border-border text-muted-foreground transition hover:border-primary hover:text-primary"
+                  >
+                    <ImageIcon className="h-6 w-6" />
+                    <span className="text-[10px]">Galeria</span>
+                  </button>
+                </div>
+              </div>
+              <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => handlePhotoAdd(e.target.files)} />
+              <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handlePhotoAdd(e.target.files)} />
+              <p className="text-xs text-muted-foreground">Tire fotos com o celular ou selecione da galeria (máx. 5MB por foto)</p>
+            </div>
+
             <div className="mt-4 space-y-2">
               <Label>Observações</Label>
               <Textarea value={observacoes} onChange={(e) => setObservacoes(e.target.value)} rows={3} placeholder="Observações adicionais..." />
@@ -217,7 +323,7 @@ const Vistoria = () => {
               <Button onClick={handleSubmit} className="gap-2">
                 <ClipboardCheck className="h-4 w-4" /> Registrar Vistoria e Gerar PDF
               </Button>
-              <Button variant="outline" onClick={generatePDF} className="gap-2">
+              <Button variant="outline" onClick={() => generatePDF()} className="gap-2">
                 <Download className="h-4 w-4" /> Apenas Gerar PDF
               </Button>
             </div>
