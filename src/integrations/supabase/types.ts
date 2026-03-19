@@ -14,16 +14,226 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      feedback_usuario: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          id: string
+          nota_atendimento: number | null
+          nota_equipamentos: number | null
+          nota_geral: number
+          nota_infraestrutura: number | null
+          sugestao: string | null
+          user_id: string | null
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota_atendimento?: number | null
+          nota_equipamentos?: number | null
+          nota_geral: number
+          nota_infraestrutura?: number | null
+          sugestao?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota_atendimento?: number | null
+          nota_equipamentos?: number | null
+          nota_geral?: number
+          nota_infraestrutura?: number | null
+          sugestao?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      solicitacoes_auditorio: {
+        Row: {
+          cpf: string
+          created_at: string
+          data_evento: string
+          descricao_evento: string | null
+          email: string
+          horario_fim: string
+          horario_inicio: string
+          id: string
+          nome_solicitante: string
+          num_participantes: number | null
+          orgao: string
+          secretaria_atendida: string
+          status: Database["public"]["Enums"]["status_solicitacao"]
+          telefone: string | null
+          termo_assinado_url: string | null
+          titulo_evento: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          cpf: string
+          created_at?: string
+          data_evento: string
+          descricao_evento?: string | null
+          email: string
+          horario_fim: string
+          horario_inicio: string
+          id?: string
+          nome_solicitante: string
+          num_participantes?: number | null
+          orgao: string
+          secretaria_atendida: string
+          status?: Database["public"]["Enums"]["status_solicitacao"]
+          telefone?: string | null
+          termo_assinado_url?: string | null
+          titulo_evento: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          cpf?: string
+          created_at?: string
+          data_evento?: string
+          descricao_evento?: string | null
+          email?: string
+          horario_fim?: string
+          horario_inicio?: string
+          id?: string
+          nome_solicitante?: string
+          num_participantes?: number | null
+          orgao?: string
+          secretaria_atendida?: string
+          status?: Database["public"]["Enums"]["status_solicitacao"]
+          telefone?: string | null
+          termo_assinado_url?: string | null
+          titulo_evento?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vistoria_equipamentos: {
+        Row: {
+          ar_condicionado: Database["public"]["Enums"]["status_item"]
+          created_at: string
+          id: string
+          iluminacao: Database["public"]["Enums"]["status_item"]
+          inspector_id: string
+          limpeza_cadeiras: Database["public"]["Enums"]["status_item"]
+          microfones: Database["public"]["Enums"]["status_item"]
+          observacoes: string | null
+          projetor: Database["public"]["Enums"]["status_item"]
+          rede_wifi: Database["public"]["Enums"]["status_item"]
+          solicitacao_id: string | null
+          som: Database["public"]["Enums"]["status_item"]
+          tela_projecao: Database["public"]["Enums"]["status_item"]
+          tipo_vistoria: string
+        }
+        Insert: {
+          ar_condicionado?: Database["public"]["Enums"]["status_item"]
+          created_at?: string
+          id?: string
+          iluminacao?: Database["public"]["Enums"]["status_item"]
+          inspector_id: string
+          limpeza_cadeiras?: Database["public"]["Enums"]["status_item"]
+          microfones?: Database["public"]["Enums"]["status_item"]
+          observacoes?: string | null
+          projetor?: Database["public"]["Enums"]["status_item"]
+          rede_wifi?: Database["public"]["Enums"]["status_item"]
+          solicitacao_id?: string | null
+          som?: Database["public"]["Enums"]["status_item"]
+          tela_projecao?: Database["public"]["Enums"]["status_item"]
+          tipo_vistoria: string
+        }
+        Update: {
+          ar_condicionado?: Database["public"]["Enums"]["status_item"]
+          created_at?: string
+          id?: string
+          iluminacao?: Database["public"]["Enums"]["status_item"]
+          inspector_id?: string
+          limpeza_cadeiras?: Database["public"]["Enums"]["status_item"]
+          microfones?: Database["public"]["Enums"]["status_item"]
+          observacoes?: string | null
+          projetor?: Database["public"]["Enums"]["status_item"]
+          rede_wifi?: Database["public"]["Enums"]["status_item"]
+          solicitacao_id?: string | null
+          som?: Database["public"]["Enums"]["status_item"]
+          tela_projecao?: Database["public"]["Enums"]["status_item"]
+          tipo_vistoria?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vistoria_equipamentos_solicitacao_id_fkey"
+            columns: ["solicitacao_id"]
+            isOneToOne: false
+            referencedRelation: "solicitacoes_auditorio"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "readonly"
+      status_item: "bom" | "manutencao" | "ajuste"
+      status_solicitacao: "pendente" | "aprovada" | "recusada" | "cancelada"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +360,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "readonly"],
+      status_item: ["bom", "manutencao", "ajuste"],
+      status_solicitacao: ["pendente", "aprovada", "recusada", "cancelada"],
+    },
   },
 } as const
