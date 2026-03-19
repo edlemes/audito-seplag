@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { AvaliacaoFeedback } from "@/types/agendamento";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ratingLabels = [
   { key: "notaGeral" as const, label: "Experiência Geral" },

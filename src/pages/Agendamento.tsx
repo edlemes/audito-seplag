@@ -28,7 +28,9 @@ const Agendamento = () => {
 
   const [termoAssinado, setTermoAssinado] = useState<File | null>(null);
 
-  const handleSubmit = () => {
+  const { user } = useAuth();
+
+  const handleSubmit = async () => {
     if (!solicitante.nome || !solicitante.cpf || !solicitante.email) {
       toast.error("Preencha todos os dados do solicitante.");
       setStep(0);
@@ -39,7 +41,28 @@ const Agendamento = () => {
       setStep(1);
       return;
     }
-    console.log("Solicitação:", { solicitante, evento, termoAssinado });
+
+    const { error } = await supabase.from("solicitacoes_auditorio").insert({
+      user_id: user?.id || null,
+      nome_solicitante: solicitante.nome,
+      cpf: solicitante.cpf,
+      email: solicitante.email,
+      telefone: solicitante.telefone,
+      orgao: solicitante.orgao,
+      titulo_evento: evento.titulo,
+      descricao_evento: evento.descricao,
+      data_evento: evento.data,
+      horario_inicio: evento.horarioInicio,
+      horario_fim: evento.horarioFim,
+      num_participantes: evento.numParticipantes,
+      secretaria_atendida: evento.secretariaAtendida,
+    });
+
+    if (error) {
+      console.error(error);
+      toast.error("Erro ao enviar solicitação. Faça login primeiro.");
+      return;
+    }
     setSubmitted(true);
     toast.success("Solicitação enviada com sucesso!");
   };
