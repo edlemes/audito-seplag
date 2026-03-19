@@ -36,6 +36,7 @@ const App = () => (
             <Route path="/admin/vistoria" element={<ProtectedRoute requireAdmin><Vistoria /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <FloatingButtons />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
