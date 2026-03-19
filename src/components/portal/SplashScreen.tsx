@@ -3,22 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import logoSeplag from "@/assets/logoseplag.png";
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [text, setText] = useState("");
   const fullText = "SEPLAG Agenda Fácil";
-
-  useEffect(() => {
-    supabase
-      .from("cms_content")
-      .select("imagem_url")
-      .eq("tipo", "logo")
-      .eq("ativo", true)
-      .limit(1)
-      .single()
-      .then(({ data }) => {
-        if (data) setLogoUrl(data.imagem_url);
-      });
-  }, []);
 
   // Typing effect
   useEffect(() => {
