@@ -60,7 +60,7 @@ const Admin = () => {
     }
   };
 
-  const updateStatus = async (id: string, status: string) => {
+  const updateStatus = async (id: string, status: "pendente" | "aprovada" | "recusada" | "cancelada") => {
     await supabase.from("solicitacoes_auditorio").update({ status }).eq("id", id);
     loadData();
   };
