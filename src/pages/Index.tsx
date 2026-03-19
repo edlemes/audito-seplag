@@ -1,4 +1,5 @@
 import HeroCarousel from "@/components/portal/HeroCarousel";
+import NoticiasSection from "@/components/portal/NoticiasSection";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { CalendarPlus, Mic2, Monitor, Users, Shield } from "lucide-react";
@@ -38,6 +39,9 @@ const Index = () => (
         </div>
       </div>
     </section>
+
+    {/* Últimos Eventos */}
+    <NoticiasSection />
 
     {/* CTA */}
     <section className="seplag-gradient py-12">
