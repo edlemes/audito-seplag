@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      cms_content: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          id: string
+          imagem_url: string
+          ordem: number
+          subtitulo: string | null
+          tipo: string
+          titulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          imagem_url: string
+          ordem?: number
+          subtitulo?: string | null
+          tipo: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          id?: string
+          imagem_url?: string
+          ordem?: number
+          subtitulo?: string | null
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       feedback_usuario: {
         Row: {
           comentario: string | null
