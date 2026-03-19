@@ -13,6 +13,7 @@ import Avaliacao from "./pages/Avaliacao.tsx";
 import Login from "./pages/Login.tsx";
 import Admin from "./pages/Admin.tsx";
 import GestaoUsuarios from "./pages/GestaoUsuarios.tsx";
+import GestaoConteudo from "./pages/GestaoConteudo.tsx";
 import Vistoria from "./pages/Vistoria.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
