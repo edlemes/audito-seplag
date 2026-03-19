@@ -62,7 +62,7 @@ const Vistoria = () => {
       observacoes,
       ...items,
     } as any);
-    if (error) { toast.error("Erro ao salvar vistoria."); console.error(error); return; }
+    if (error) { toast.error("Erro ao salvar vistoria."); console.error('[Vistoria] Save failed:', error?.code ?? 'unknown'); return; }
     toast.success("Vistoria registrada com sucesso!");
     generatePDF();
     setObservacoes("");

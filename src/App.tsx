@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index.tsx";
 import Agendamento from "./pages/Agendamento.tsx";
 import Orientacoes from "./pages/Orientacoes.tsx";
@@ -29,9 +30,9 @@ const App = () => (
             <Route path="/orientacoes" element={<Orientacoes />} />
             <Route path="/avaliacao" element={<Avaliacao />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/admin/usuarios" element={<GestaoUsuarios />} />
-            <Route path="/admin/vistoria" element={<Vistoria />} />
+            <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
+            <Route path="/admin/usuarios" element={<ProtectedRoute requireAdmin><GestaoUsuarios /></ProtectedRoute>} />
+            <Route path="/admin/vistoria" element={<ProtectedRoute requireAdmin><Vistoria /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
