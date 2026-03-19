@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      blocked_dates: {
+        Row: {
+          created_at: string
+          created_by: string
+          data: string
+          id: string
+          motivo: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          data: string
+          id?: string
+          motivo?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          data?: string
+          id?: string
+          motivo?: string
+        }
+        Relationships: []
+      }
       cms_content: {
         Row: {
           ativo: boolean
