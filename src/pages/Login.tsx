@@ -10,24 +10,16 @@ import { toast } from "sonner";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    if (isSignUp) {
-      const { error } = await signUp(email, password, displayName);
-      if (error) { toast.error(error.message); }
-      else { toast.success("Conta criada! Verifique seu e-mail."); }
-    } else {
-      const { error } = await signIn(email, password);
-      if (error) { toast.error("Credenciais inválidas."); }
-      else { navigate("/admin"); }
-    }
+    const { error } = await signIn(email, password);
+    if (error) { toast.error("Credenciais inválidas."); }
+    else { navigate("/admin"); }
     setLoading(false);
   };
 
@@ -39,18 +31,10 @@ const Login = () => {
             <Building2 className="h-7 w-7 text-primary-foreground" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Portal do Auditório</h1>
-          <p className="text-sm text-muted-foreground">
-            {isSignUp ? "Crie sua conta" : "Acesso Administrativo"}
-          </p>
+          <p className="text-sm text-muted-foreground">Acesso Administrativo</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {isSignUp && (
-            <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
-              <Input id="name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
-            </div>
-          )}
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
             <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -61,15 +45,9 @@ const Login = () => {
           </div>
           <Button type="submit" className="w-full gap-2" disabled={loading}>
             <LogIn className="h-4 w-4" />
-            {loading ? "Aguarde..." : isSignUp ? "Criar Conta" : "Entrar"}
+            {loading ? "Aguarde..." : "Entrar"}
           </Button>
         </form>
-
-        <div className="text-center">
-          <button onClick={() => setIsSignUp(!isSignUp)} className="text-sm text-primary hover:underline">
-            {isSignUp ? "Já tem conta? Fazer login" : "Não tem conta? Criar conta"}
-          </button>
-        </div>
 
         <Link to="/" className="block text-center text-xs text-muted-foreground hover:text-foreground">
           ← Voltar ao portal
