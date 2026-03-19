@@ -31,13 +31,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        {logoUrl ? (
-          <img src={logoUrl} alt="Logo" className="h-24 w-24 rounded-2xl object-contain drop-shadow-2xl" />
-        ) : (
-          <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-secondary shadow-2xl">
-            <Building2 className="h-12 w-12 text-secondary-foreground" />
-          </div>
-        )}
+        <img src={logoSeplag} alt="SEPLAG Logo" className="h-32 w-auto object-contain drop-shadow-2xl" />
       </motion.div>
 
       <div className="text-center">
