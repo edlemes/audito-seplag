@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
-import { Building2 } from "lucide-react";
+import logoSeplag from "@/assets/logoseplag.png";
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
