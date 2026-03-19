@@ -96,7 +96,8 @@ const Admin = () => {
                 {isAdmin ? "Administrador" : "Apenas Leitura"} — {user?.email}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <ReportExporter stats={stats} barData={barData} pieData={pieData} />
               {isAdmin && (
                 <>
                   <Link to="/admin/conteudo">
