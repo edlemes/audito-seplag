@@ -1,25 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
-import { Building2 } from "lucide-react";
+import logoSeplag from "@/assets/logoseplag.png";
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [text, setText] = useState("");
   const fullText = "SEPLAG Agenda Fácil";
-
-  useEffect(() => {
-    supabase
-      .from("cms_content")
-      .select("imagem_url")
-      .eq("tipo", "logo")
-      .eq("ativo", true)
-      .limit(1)
-      .single()
-      .then(({ data }) => {
-        if (data) setLogoUrl(data.imagem_url);
-      });
-  }, []);
 
   // Typing effect
   useEffect(() => {
@@ -46,13 +31,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        {logoUrl ? (
-          <img src={logoUrl} alt="Logo" className="h-24 w-24 rounded-2xl object-contain drop-shadow-2xl" />
-        ) : (
-          <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-secondary shadow-2xl">
-            <Building2 className="h-12 w-12 text-secondary-foreground" />
-          </div>
-        )}
+        <img src={logoSeplag} alt="SEPLAG Logo" className="h-32 w-auto object-contain drop-shadow-2xl" />
       </motion.div>
 
       <div className="text-center">
