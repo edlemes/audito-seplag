@@ -99,3 +99,16 @@
     @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
   }
 }
+
+/* High contrast mode */
+.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 80%;
+  --border: 0 0% 40%;
+  --primary: 60 100% 50%;
+  --primary-foreground: 0 0% 0%;
+}

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import FloatingButtons from "@/components/portal/FloatingButtons";
 import Index from "./pages/Index.tsx";
 import Agendamento from "./pages/Agendamento.tsx";
 import Orientacoes from "./pages/Orientacoes.tsx";
