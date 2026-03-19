@@ -213,7 +213,7 @@ const Vistoria = () => {
     doc.save(`vistoria_${tipoVistoria}_${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
-  if (!isAdmin) return null;
+  if (!isAdmin && !isReadonly) return null;
 
   return (
     <div className="flex min-h-screen flex-col">

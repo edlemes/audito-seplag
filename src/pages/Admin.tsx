@@ -98,13 +98,17 @@ const Admin = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               <ReportExporter stats={stats} barData={barData} pieData={pieData} />
+              {(isAdmin || isReadonly) && (
+                <>
+                  <Link to="/admin/vistoria">
+                    <Button variant="outline" size="sm" className="gap-1"><ClipboardCheck className="h-4 w-4" />Vistoria</Button>
+                  </Link>
+                </>
+              )}
               {isAdmin && (
                 <>
                   <Link to="/admin/conteudo">
                     <Button variant="outline" size="sm" className="gap-1"><LayoutDashboard className="h-4 w-4" />Conteúdo</Button>
-                  </Link>
-                  <Link to="/admin/vistoria">
-                    <Button variant="outline" size="sm" className="gap-1"><ClipboardCheck className="h-4 w-4" />Vistoria</Button>
                   </Link>
                   <Link to="/admin/usuarios">
                     <Button variant="outline" size="sm" className="gap-1"><Users className="h-4 w-4" />Usuários</Button>
