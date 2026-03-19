@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Send, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send, CheckCircle2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
@@ -10,6 +10,7 @@ import type { DadosSolicitante, DadosEvento } from "@/types/agendamento";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const steps = ["Solicitante", "Evento", "Documentação"];
 
@@ -71,16 +72,38 @@ const Agendamento = () => {
     return (
       <div className="flex min-h-screen flex-col">
         <Header />
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-          <CheckCircle2 className="h-16 w-16 text-success" />
+        <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-6 p-8 text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-success/10">
+            <CheckCircle2 className="h-12 w-12 text-success" />
+          </div>
           <h2 className="text-2xl font-bold text-foreground">Solicitação Enviada!</h2>
           <p className="max-w-md text-muted-foreground">
             Sua solicitação de agendamento foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
           </p>
-          <Button onClick={() => { setSubmitted(false); setStep(0); }} variant="outline">
-            Nova Solicitação
-          </Button>
-        </div>
+
+          {/* Resumo visual */}
+          <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 text-left shadow-sm">
+            <h3 className="mb-3 font-semibold text-foreground">Resumo do Pedido</h3>
+            <dl className="space-y-2 text-sm">
+              <div className="flex justify-between"><dt className="text-muted-foreground">Evento</dt><dd className="font-medium text-foreground">{evento.titulo}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Data</dt><dd className="font-medium text-foreground">{evento.data}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Horário</dt><dd className="font-medium text-foreground">{evento.horarioInicio} – {evento.horarioFim}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Solicitante</dt><dd className="font-medium text-foreground">{solicitante.nome}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Órgão</dt><dd className="font-medium text-foreground">{solicitante.orgao}</dd></div>
+            </dl>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link to="/orientacoes">
+              <Button variant="outline" className="gap-2">
+                <FileText className="h-4 w-4" /> Baixar Guia de Orientações
+              </Button>
+            </Link>
+            <Button onClick={() => { setSubmitted(false); setStep(0); }} variant="secondary">
+              Nova Solicitação
+            </Button>
+          </div>
+        </main>
         <Footer />
       </div>
     );
@@ -90,18 +113,19 @@ const Agendamento = () => {
     <div className="flex min-h-screen flex-col">
       <Header />
 
-      <div className="flex-1 py-10">
+      <main id="main-content" className="flex-1 py-10">
         <div className="container mx-auto max-w-3xl px-4">
           <h1 className="mb-2 text-2xl font-bold text-foreground">Solicitar Agendamento</h1>
           <p className="mb-8 text-muted-foreground">Preencha as etapas abaixo para solicitar o uso do auditório.</p>
 
           {/* Stepper */}
-          <div className="mb-8 flex items-center justify-center gap-2">
+          <div className="mb-8 flex items-center justify-center gap-2" role="navigation" aria-label="Etapas do formulário">
             {steps.map((label, i) => (
               <div key={label} className="flex items-center gap-2">
                 <button
                   onClick={() => setStep(i)}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors ${
+                  aria-current={i === step ? "step" : undefined}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     i === step
                       ? "bg-primary text-primary-foreground"
                       : i < step
@@ -142,7 +166,7 @@ const Agendamento = () => {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
