@@ -58,7 +58,7 @@ const FeedbackForm = () => {
     });
 
     if (error) {
-      console.error(error);
+      console.error('[Feedback] Submission failed:', error?.code ?? 'unknown');
       toast.error("Erro ao enviar avaliação. Faça login primeiro.");
       return;
     }

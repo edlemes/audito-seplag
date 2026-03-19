@@ -39,11 +39,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        setTimeout(() => checkRoles(session.user.id), 0);
+        await checkRoles(session.user.id);
       } else {
         setIsAdmin(false);
         setIsReadonly(false);
@@ -51,10 +51,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) checkRoles(session.user.id);
+      if (session?.user) {
+        await checkRoles(session.user.id);
+      }
       setLoading(false);
     });
 

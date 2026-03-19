@@ -59,7 +59,7 @@ const Agendamento = () => {
     });
 
     if (error) {
-      console.error(error);
+      console.error('[Agendamento] Submission failed:', error?.code ?? 'unknown');
       toast.error("Erro ao enviar solicitação. Faça login primeiro.");
       return;
     }
