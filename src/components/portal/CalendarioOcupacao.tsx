@@ -82,7 +82,7 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
   };
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase.from("solicitacoes_auditorio").update({ status }).eq("id", id);
+    await supabase.from("solicitacoes_auditorio").update({ status: status as "pendente" | "aprovada" | "recusada" | "cancelada" }).eq("id", id);
     loadEventos();
     if (selectedDay) {
       const day = selectedDay.getDate();

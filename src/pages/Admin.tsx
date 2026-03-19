@@ -166,6 +166,11 @@ const Admin = () => {
                 <p className="py-20 text-center text-muted-foreground">Nenhuma avaliação registrada</p>
               )}
             </div>
+           </div>
+
+          {/* Calendário de Ocupação */}
+          <div className="mb-8">
+            <CalendarioOcupacao isAdmin={isAdmin} />
           </div>
 
           {/* Solicitations table */}
