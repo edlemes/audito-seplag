@@ -8,6 +8,8 @@ import FormEvento from "@/components/portal/FormEvento";
 import FormDocumentacao from "@/components/portal/FormDocumentacao";
 import type { DadosSolicitante, DadosEvento } from "@/types/agendamento";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const steps = ["Solicitante", "Evento", "Documentação"];
 
