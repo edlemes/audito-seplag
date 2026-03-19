@@ -34,7 +34,7 @@ interface PhotoItem {
 }
 
 const Vistoria = () => {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isReadonly } = useAuth();
   const [tipoVistoria, setTipoVistoria] = useState<string>("pre_evento");
   const [solicitacaoId, setSolicitacaoId] = useState<string>("");
   const [solicitacoes, setSolicitacoes] = useState<any[]>([]);
