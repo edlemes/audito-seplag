@@ -5,6 +5,7 @@ import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { CalendarDays, Users, ClipboardCheck, MessageSquare, LogOut, ShieldCheck, FileSearch } from "lucide-react";
+import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -165,6 +166,11 @@ const Admin = () => {
                 <p className="py-20 text-center text-muted-foreground">Nenhuma avaliação registrada</p>
               )}
             </div>
+           </div>
+
+          {/* Calendário de Ocupação */}
+          <div className="mb-8">
+            <CalendarioOcupacao isAdmin={isAdmin} />
           </div>
 
           {/* Solicitations table */}
