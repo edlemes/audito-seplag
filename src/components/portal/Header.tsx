@@ -1,13 +1,20 @@
-import { Building2, Menu, X } from "lucide-react";
+import { Building2, Menu, X, LogIn, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
-const navItems = [
-  { label: "Início", path: "/" },
-  { label: "Agendamento", path: "/agendamento" },
-  { label: "Orientações", path: "/orientacoes" },
-  { label: "Avaliação", path: "/avaliacao" },
-];
+const Header = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+  const { user, isAdmin, isReadonly } = useAuth();
+
+  const navItems = [
+    { label: "Início", path: "/" },
+    { label: "Agendamento", path: "/agendamento" },
+    { label: "Orientações", path: "/orientacoes" },
+    { label: "Avaliação", path: "/avaliacao" },
+    ...(isAdmin || isReadonly ? [{ label: "Admin", path: "/admin" }] : []),
+  ];
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
