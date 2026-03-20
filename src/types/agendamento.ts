@@ -40,7 +40,21 @@ export interface AvaliacaoFeedback {
   comentario: string;
   sugestao: string;
   sugestaoRecurso: string;
+  recursosUtilizados: string[];
+  falhaTecnica: boolean;
+  descricaoFalha: string;
 }
+
+export const RECURSOS_AUDITORIO = [
+  "Microfone sem fio",
+  "Microfone de lapela",
+  "Pointer/Apontador laser",
+  "Cabine de tradução",
+  "Gravação do evento",
+  "Transmissão ao vivo",
+  "Notebook auxiliar",
+  "Adaptador HDMI/VGA",
+] as const;
 
 export const SECRETARIAS_MT = [
   "Casa Civil",

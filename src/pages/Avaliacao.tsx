@@ -2,7 +2,7 @@ import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import FeedbackForm from "@/components/portal/FeedbackForm";
 import { Card, CardContent } from "@/components/ui/card";
-import { CalendarCheck, Users, Star, Award } from "lucide-react";
+import { Sofa, Wifi, HeadphonesIcon, BarChart3, CalendarCheck, Users, Star, Award } from "lucide-react";
 import { motion } from "framer-motion";
 
 const stats = [
@@ -10,6 +10,13 @@ const stats = [
   { icon: Users, value: "5.000+", label: "Participantes" },
   { icon: Star, value: "4.7", label: "Nota média" },
   { icon: Award, value: "98%", label: "Aprovação" },
+];
+
+const dimensions = [
+  { icon: Sofa, title: "Infraestrutura", desc: "Poltronas, climatização, limpeza e acessibilidade" },
+  { icon: Wifi, title: "Tecnologia", desc: "Projeção, áudio, Wi-Fi e equipamentos" },
+  { icon: HeadphonesIcon, title: "Apoio", desc: "Agendamento, equipe e suporte técnico" },
+  { icon: BarChart3, title: "Impacto", desc: "Satisfação geral e recomendação (NPS)" },
 ];
 
 const Avaliacao = () => (
@@ -24,7 +31,7 @@ const Avaliacao = () => (
           animate={{ opacity: 1, y: 0 }}
           className="text-2xl font-bold leading-tight md:text-3xl"
         >
-          Sua opinião constrói um serviço público melhor
+          Sua Experiência é a nossa Métrica
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -32,8 +39,8 @@ const Avaliacao = () => (
           transition={{ delay: 0.1 }}
           className="mx-auto mt-3 max-w-xl text-sm text-primary-foreground/80"
         >
-          Ajude-nos a aprimorar o Auditório Antônio Mendes. Cada feedback é analisado pela equipe de gestão
-          para garantir melhorias contínuas.
+          Contribua para a excelência do Auditório Antônio Mendes. Cada feedback
+          é analisado pela equipe de gestão para garantir melhorias contínuas.
         </motion.p>
       </div>
     </section>
@@ -64,10 +71,45 @@ const Avaliacao = () => (
       </div>
     </section>
 
-    {/* Form */}
+    {/* Main: sidebar + form */}
     <div className="flex-1 bg-background py-12">
       <div className="container mx-auto px-4">
-        <FeedbackForm />
+        <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[280px_1fr]">
+          {/* Sidebar — what's being evaluated */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 space-y-3">
+              <h3 className="text-sm font-semibold text-foreground">O que você avalia</h3>
+              <p className="text-xs text-muted-foreground">
+                Cada dimensão gera indicadores para manutenção preventiva e investimento.
+              </p>
+              <div className="space-y-2 pt-2">
+                {dimensions.map(({ icon: Icon, title, desc }, i) => (
+                  <motion.div
+                    key={title}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + i * 0.08 }}
+                  >
+                    <Card className="border-border/40 shadow-none">
+                      <CardContent className="flex items-start gap-3 p-3">
+                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10">
+                          <Icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-foreground">{title}</p>
+                          <p className="text-[11px] leading-snug text-muted-foreground">{desc}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* Form */}
+          <FeedbackForm />
+        </div>
       </div>
     </div>
 

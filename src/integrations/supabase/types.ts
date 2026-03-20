@@ -78,6 +78,8 @@ export type Database = {
         Row: {
           comentario: string | null
           created_at: string
+          descricao_falha: string | null
+          falha_tecnica: boolean | null
           id: string
           nota_atendimento: number | null
           nota_conforto: number | null
@@ -88,6 +90,7 @@ export type Database = {
           nota_tecnologia: number | null
           nota_temperatura: number | null
           nps_score: number | null
+          recursos_utilizados: string[] | null
           sugestao: string | null
           sugestao_recurso: string | null
           suporte_tecnico: boolean | null
@@ -96,6 +99,8 @@ export type Database = {
         Insert: {
           comentario?: string | null
           created_at?: string
+          descricao_falha?: string | null
+          falha_tecnica?: boolean | null
           id?: string
           nota_atendimento?: number | null
           nota_conforto?: number | null
@@ -106,6 +111,7 @@ export type Database = {
           nota_tecnologia?: number | null
           nota_temperatura?: number | null
           nps_score?: number | null
+          recursos_utilizados?: string[] | null
           sugestao?: string | null
           sugestao_recurso?: string | null
           suporte_tecnico?: boolean | null
@@ -114,6 +120,8 @@ export type Database = {
         Update: {
           comentario?: string | null
           created_at?: string
+          descricao_falha?: string | null
+          falha_tecnica?: boolean | null
           id?: string
           nota_atendimento?: number | null
           nota_conforto?: number | null
@@ -124,6 +132,7 @@ export type Database = {
           nota_tecnologia?: number | null
           nota_temperatura?: number | null
           nps_score?: number | null
+          recursos_utilizados?: string[] | null
           sugestao?: string | null
           sugestao_recurso?: string | null
           suporte_tecnico?: boolean | null
