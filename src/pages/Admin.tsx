@@ -132,12 +132,13 @@ const Admin = () => {
           </div>
 
           {/* Stats cards */}
-          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
               { label: "Total Solicitações", value: stats.total, icon: CalendarDays, color: "text-primary" },
               { label: "Pendentes", value: stats.pendentes, icon: FileSearch, color: "text-warning" },
               { label: "Aprovadas", value: stats.aprovadas, icon: ClipboardCheck, color: "text-success" },
               { label: "Avaliações", value: stats.feedbacks, icon: MessageSquare, color: "text-accent" },
+              { label: "Inscritos", value: stats.inscritos, icon: Ticket, color: "text-primary" },
             ].map(({ label, value, icon: Icon, color }) => (
               <div key={label} className="rounded-xl border border-border bg-card p-5">
                 <div className="flex items-center justify-between">
