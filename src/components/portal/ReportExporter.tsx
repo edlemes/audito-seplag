@@ -92,7 +92,7 @@ const ReportExporter = ({ stats, barData, pieData }: ReportExporterProps) => {
       doc.text("RELATÓRIO EXECUTIVO", 105, 20, { align: "center" });
       doc.setFontSize(11);
       doc.setTextColor(100);
-      doc.text("Portal do Auditório SEPLAG — Mato Grosso", 105, 28, { align: "center" });
+      doc.text("Auditório Antônio Mendes — SEPLAG / Mato Grosso", 105, 28, { align: "center" });
       doc.setFontSize(9);
       doc.text(`Gerado em: ${new Date().toLocaleString("pt-BR")}`, 105, 34, { align: "center" });
 

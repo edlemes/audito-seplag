@@ -158,7 +158,7 @@ const FeedbackForm = () => {
         <h2 className="text-2xl font-bold text-foreground">Avaliação enviada com sucesso!</h2>
         <p className="text-muted-foreground">
           Agradecemos imensamente pelo seu feedback. Sua opinião é fundamental para aprimorarmos
-          continuamente os serviços do Auditório SEPLAG.
+          continuamente os serviços do Auditório Antônio Mendes.
         </p>
         <Button
           variant="outline"

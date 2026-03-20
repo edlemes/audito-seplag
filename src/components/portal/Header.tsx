@@ -165,7 +165,7 @@ const Header = () => {
             )}
             <div>
               <h1 className="text-lg font-bold leading-tight text-primary-foreground">
-                Portal do Auditório
+                Auditório Antônio Mendes
               </h1>
               <p className="text-xs font-light text-primary-foreground/70">
                 SEPLAG — Mato Grosso

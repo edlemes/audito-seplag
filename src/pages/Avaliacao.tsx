@@ -32,7 +32,7 @@ const Avaliacao = () => (
           transition={{ delay: 0.1 }}
           className="mx-auto mt-3 max-w-xl text-sm text-primary-foreground/80"
         >
-          Ajude-nos a aprimorar o Auditório SEPLAG. Cada feedback é analisado pela equipe de gestão
+          Ajude-nos a aprimorar o Auditório Antônio Mendes. Cada feedback é analisado pela equipe de gestão
           para garantir melhorias contínuas.
         </motion.p>
       </div>

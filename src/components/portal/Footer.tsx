@@ -149,7 +149,7 @@ const Footer = () => {
       {/* Bottom bar */}
       <div className="border-t border-white/10 px-6 py-3 text-center">
         <p className="text-[11px] text-white/30">
-          © {new Date().getFullYear()} SEPLAG – Todos os direitos reservados.
+          © {new Date().getFullYear()} SEPLAG — Auditório Antônio Mendes – Todos os direitos reservados.
         </p>
       </div>
     </footer>

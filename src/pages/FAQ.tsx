@@ -15,9 +15,9 @@ const faqItems = [
       "Acesse a página de Agendamento, preencha o formulário com seus dados pessoais e as informações do evento. Após o envio, a equipe da SEPLAG analisará sua solicitação e responderá em até 48 horas úteis.",
   },
   {
-    question: "Qual a capacidade máxima do auditório?",
+    question: "Qual a capacidade máxima do Auditório Antônio Mendes?",
     answer:
-      "O auditório da SEPLAG comporta até 200 participantes sentados confortavelmente, com acessibilidade para pessoas com mobilidade reduzida.",
+      "O Auditório Antônio Mendes comporta até 200 participantes sentados confortavelmente, com acessibilidade para pessoas com mobilidade reduzida.",
   },
   {
     question: "Quais equipamentos estão disponíveis?",
@@ -32,7 +32,7 @@ const faqItems = [
   {
     question: "É possível agendar nos finais de semana ou feriados?",
     answer:
-      "O auditório funciona em dias úteis. Datas de feriados nacionais e estaduais (Mato Grosso) são bloqueadas automaticamente no calendário. Casos excepcionais podem ser avaliados pela administração.",
+      "O Auditório Antônio Mendes funciona em dias úteis. Datas de feriados nacionais e estaduais (Mato Grosso) são bloqueadas automaticamente no calendário. Casos excepcionais podem ser avaliados pela administração.",
   },
   {
     question: "Como acompanho o status da minha solicitação?",
@@ -45,7 +45,7 @@ const faqItems = [
       "Sim. Entre em contato com a administração pelo telefone (65) 3613-3300 ou pelo WhatsApp disponível no site com antecedência mínima de 48 horas.",
   },
   {
-    question: "Quem pode solicitar o uso do auditório?",
+    question: "Quem pode solicitar o uso do Auditório Antônio Mendes?",
     answer:
       "Servidores públicos estaduais e representantes de órgãos vinculados ao Governo do Estado de Mato Grosso podem solicitar o espaço para eventos institucionais, capacitações e reuniões.",
   },
@@ -71,8 +71,8 @@ const FAQ = () => (
           <h1 className="mb-2 text-center text-3xl font-bold text-foreground">
             Dúvidas Frequentes
           </h1>
-          <p className="mb-10 text-center text-muted-foreground">
-            Encontre respostas rápidas sobre o uso do auditório da SEPLAG
+           <p className="mb-10 text-center text-muted-foreground">
+             Encontre respostas rápidas sobre o uso do Auditório Antônio Mendes
           </p>
 
           <Accordion type="single" collapsible className="space-y-2">

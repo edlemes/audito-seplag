@@ -4,9 +4,9 @@ import { Download, FileText, Info, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const orientacoes = [
-  "O auditório deve ser solicitado com no mínimo 5 dias úteis de antecedência.",
+  "O Auditório Antônio Mendes deve ser solicitado com no mínimo 5 dias úteis de antecedência.",
   "O uso é exclusivo para atividades institucionais de órgãos do Governo de MT.",
-  "É proibido o consumo de alimentos e bebidas dentro do auditório.",
+  "É proibido o consumo de alimentos e bebidas dentro do Auditório Antônio Mendes.",
   "O solicitante é responsável pela organização e limpeza do espaço.",
   "Equipamentos audiovisuais devem ser solicitados previamente.",
   "O horário de funcionamento é das 8h às 18h, de segunda a sexta-feira.",
@@ -20,7 +20,7 @@ const Orientacoes = () => (
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="mb-2 text-2xl font-bold text-foreground">Orientações de Uso</h1>
         <p className="mb-8 text-muted-foreground">
-          Informações importantes sobre o uso do auditório e documentação necessária.
+          Informações importantes sobre o uso do Auditório Antônio Mendes e documentação necessária.
         </p>
 
         {/* Regras */}
@@ -48,7 +48,7 @@ const Orientacoes = () => (
             Termo de Responsabilidade
           </h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            Para utilizar o auditório, é obrigatória a assinatura do Termo de Responsabilidade via SigDoc. Baixe o modelo, assine digitalmente e envie na etapa de agendamento.
+            Para utilizar o Auditório Antônio Mendes, é obrigatória a assinatura do Termo de Responsabilidade via SigDoc. Baixe o modelo, assine digitalmente e envie na etapa de agendamento.
           </p>
           <Button variant="outline" className="gap-2" onClick={() => alert("Download do Termo de Responsabilidade")}>
             <Download className="h-4 w-4" />

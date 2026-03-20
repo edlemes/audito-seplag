@@ -47,7 +47,7 @@ const maskPhone = (v: string) => {
 const eventInfo = [
   { icon: CalendarDays, label: "Data", value: "A definir", color: "text-primary" },
   { icon: Clock, label: "Horário", value: "08h – 17h", color: "text-primary" },
-  { icon: MapPin, label: "Local", value: "Auditório SEPLAG – CPA, Cuiabá", color: "text-primary" },
+  { icon: MapPin, label: "Local", value: "Auditório Antônio Mendes – CPA, Cuiabá", color: "text-primary" },
   { icon: Users, label: "Vagas", value: "200 participantes", color: "text-primary" },
 ];
 
@@ -171,7 +171,7 @@ const Inscricao = () => {
               style={{ lineHeight: "1.1" }}
             >
               Inscrições Abertas –{" "}
-              <span className="text-[#66B2FF]">Auditório SEPLAG</span>
+              <span className="text-[#66B2FF]">Auditório Antônio Mendes</span>
             </motion.h1>
             <motion.p
               variants={reveal}
@@ -233,7 +233,7 @@ const Inscricao = () => {
           <div className="container mx-auto max-w-3xl px-4 text-center">
             <h2 className="mb-4 text-2xl font-bold text-foreground">Sobre o Evento</h2>
             <p className="text-muted-foreground leading-relaxed">
-              O Encontro Estratégico do Auditório SEPLAG reúne servidores, gestores e especialistas
+              O Encontro Estratégico do Auditório Antônio Mendes reúne servidores, gestores e especialistas
               para debater soluções de inovação na administração pública. Com palestras, painéis e
               workshops, o evento promove a troca de experiências e o desenvolvimento de competências
               essenciais para a modernização do serviço público em Mato Grosso.

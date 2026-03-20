@@ -8,7 +8,7 @@ import auditorio2 from "@/assets/auditorio-2.jpg";
 import auditorio3 from "@/assets/auditorio-3.jpg";
 
 const defaultSlides = [
-  { image: auditorio1, title: "Auditório SEPLAG", subtitle: "Espaço moderno para eventos institucionais" },
+  { image: auditorio1, title: "Auditório Antônio Mendes", subtitle: "Espaço moderno para eventos institucionais da SEPLAG" },
   { image: auditorio2, title: "Infraestrutura Completa", subtitle: "Equipamentos audiovisuais de última geração" },
   { image: auditorio3, title: "Eventos Profissionais", subtitle: "Capacidade para grandes conferências e reuniões" },
 ];

@@ -289,7 +289,7 @@ const GestaoConteudo = () => {
               <div className="space-y-3">
                 <div><Label className="text-xs">Link da Imagem *</Label><Input value={newUrl} onChange={(e) => setNewUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" /></div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div><Label className="text-xs">Título</Label><Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Auditório SEPLAG" /></div>
+                  <div><Label className="text-xs">Título</Label><Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Auditório Antônio Mendes" /></div>
                   <div><Label className="text-xs">Subtítulo</Label><Input value={subtitulo} onChange={(e) => setSubtitulo(e.target.value)} placeholder="Ex: Espaço moderno..." /></div>
                 </div>
               </div>
