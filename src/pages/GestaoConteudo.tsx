@@ -186,8 +186,9 @@ const GestaoConteudo = () => {
 
   const saveEditNoticia = async () => {
     if (!editingNoticiaId) return;
-    await supabase.from("noticias").update({ titulo: editNoticiaTitulo, descricao: editNoticiaDesc || null, imagem_url: editNoticiaUrl.trim() }).eq("id", editingNoticiaId);
-    toast.success("Notícia atualizada!"); setEditingNoticiaId(null); loadNoticias();
+    const { error } = await supabase.from("noticias").update({ titulo: editNoticiaTitulo, descricao: editNoticiaDesc || null, imagem_url: editNoticiaUrl.trim() }).eq("id", editingNoticiaId);
+    if (error) { console.error("Noticia edit error:", error); toast.error("Erro ao editar: " + error.message); }
+    else { toast.success("Notícia atualizada!"); setEditingNoticiaId(null); loadNoticias(); }
   };
 
   if (!isAdmin) return null;
