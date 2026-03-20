@@ -297,6 +297,49 @@ const GestaoConteudo = () => {
             </form>
           </div>
 
+          {/* Galeria Section */}
+          <div className="mb-8 rounded-xl border border-border bg-card p-6">
+            <h3 className="mb-4 flex items-center gap-2 font-semibold text-foreground">
+              <Camera className="h-5 w-5 text-primary" /> Galeria de Eventos
+            </h3>
+            <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {galeriaItems.map((item) => (
+                <div key={item.id} className="group relative overflow-hidden rounded-lg border border-border">
+                  <img src={item.imagem_url} alt={item.titulo || "Galeria"} className="aspect-[4/3] w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }} />
+                  <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/50 to-transparent opacity-0 transition group-hover:opacity-100">
+                    <div className="flex w-full items-center justify-between p-2">
+                      <span className="text-xs font-medium text-white">{item.titulo || "Sem título"}</span>
+                      <Button size="icon" variant="ghost" className="h-7 w-7 text-white hover:bg-white/20" onClick={() => handleDelete(item)}><Trash2 className="h-4 w-4" /></Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {galeriaItems.length === 0 && <p className="col-span-full py-6 text-center text-sm text-muted-foreground">Nenhuma foto na galeria.</p>}
+            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              if (!galeriaUrl.trim()) return toast.error("Informe o link da imagem");
+              setUploading(true);
+              const { error } = await supabase.from("cms_content").insert({
+                tipo: "galeria", titulo: galeriaTitulo || null, subtitulo: galeriaSubtitulo || null,
+                imagem_url: galeriaUrl.trim(), ordem: galeriaItems.length,
+              });
+              if (error) toast.error("Erro ao salvar");
+              else { toast.success("Foto adicionada!"); setGaleriaTitulo(""); setGaleriaSubtitulo(""); setGaleriaUrl(""); loadContent(); }
+              setUploading(false);
+            }} className="rounded-lg border border-dashed border-border p-4">
+              <p className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground"><Plus className="h-4 w-4 text-primary" /> Adicionar foto</p>
+              <div className="space-y-3">
+                <div><Label className="text-xs">Link da Imagem *</Label><Input value={galeriaUrl} onChange={(e) => setGaleriaUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" /></div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div><Label className="text-xs">Título</Label><Input value={galeriaTitulo} onChange={(e) => setGaleriaTitulo(e.target.value)} placeholder="Ex: Palestra de Inovação" /></div>
+                  <div><Label className="text-xs">Legenda</Label><Input value={galeriaSubtitulo} onChange={(e) => setGaleriaSubtitulo(e.target.value)} placeholder="Ex: Março 2026" /></div>
+                </div>
+              </div>
+              <Button type="submit" className="mt-3 gap-2" disabled={uploading}><Plus className="h-4 w-4" />{uploading ? "Salvando..." : "Adicionar Foto"}</Button>
+            </form>
+          </div>
+
           {/* Noticias Section */}
           <div className="rounded-xl border border-border bg-card p-6">
             <h3 className="mb-4 flex items-center gap-2 font-semibold text-foreground">
