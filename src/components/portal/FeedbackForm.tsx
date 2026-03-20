@@ -140,10 +140,7 @@ const FeedbackForm = () => {
   }
 
   const RatingRow = ({ label, field }: { label: string; field: keyof AvaliacaoFeedback }) => (
-    <div className="flex items-center justify-between gap-4">
-      <Label className="text-sm font-medium">{label}</Label>
-      <StarRating value={data[field] as number} onChange={(v) => set(field, v)} />
-    </div>
+    <SentimentScale label={label} value={data[field] as number} onChange={(v) => set(field, v)} />
   );
 
   return (
