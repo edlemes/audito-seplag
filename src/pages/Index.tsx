@@ -44,43 +44,6 @@ const Index = () => (
         </div>
       </motion.section>
 
-      {/* Features */}
-      <motion.section
-        className="py-16"
-        variants={reveal}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="container mx-auto px-4">
-          <h2 className="mb-2 text-center text-3xl font-bold text-foreground">
-            Recursos do Auditório
-          </h2>
-          <p className="mb-10 text-center text-muted-foreground">
-            Infraestrutura completa para seus eventos institucionais
-          </p>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="glass-card group rounded-xl p-6 text-center transition-all hover:-translate-y-1 hover:shadow-xl active:scale-[0.97]"
-              >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20">
-                  <Icon className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="mb-1 font-semibold text-foreground">{title}</h3>
-                <p className="text-sm text-muted-foreground">{desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
       {/* Últimos Eventos */}
       <NoticiasSection />
 
