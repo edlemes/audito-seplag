@@ -238,8 +238,6 @@ const Inscricao = () => {
               workshops, o evento promove a troca de experiências e o desenvolvimento de competências
               essenciais para a modernização do serviço público em Mato Grosso.
             </p>
-              essenciais para a modernização do serviço público em Mato Grosso.
-            </p>
           </div>
         </motion.section>
 
