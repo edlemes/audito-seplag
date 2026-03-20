@@ -4,14 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Header = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const location = useLocation();
   const { user, isAdmin, isReadonly } = useAuth();
 
-  // Accessibility state
   const [fontSize, setFontSize] = useState(100);
   const [highContrast, setHighContrast] = useState(false);
   const [underlineLinks, setUnderlineLinks] = useState(false);
@@ -27,6 +27,12 @@ const Header = () => {
       .then(({ data }) => {
         if (data) setLogoUrl(data.imagem_url);
       });
+  }, []);
+
+  useEffect(() => {
+    const handle = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handle, { passive: true });
+    return () => window.removeEventListener("scroll", handle);
   }, []);
 
   const changeFontSize = (delta: number) => {
@@ -68,9 +74,72 @@ const Header = () => {
 
   const hasChanges = fontSize !== 100 || highContrast || underlineLinks;
 
+  const AccessibilityMenu = () => (
+    <div className="space-y-4">
+      <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+        Acessibilidade
+      </p>
+      <div className="space-y-1.5">
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Type className="h-3.5 w-3.5" /> Tamanho da fonte
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => changeFontSize(-10)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Diminuir fonte"
+          >
+            <Minus className="h-4 w-4" />
+          </button>
+          <span className="min-w-[3ch] text-center text-sm font-semibold text-foreground">
+            {fontSize}%
+          </span>
+          <button
+            onClick={() => changeFontSize(10)}
+            className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            aria-label="Aumentar fonte"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      <button
+        onClick={toggleContrast}
+        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+          highContrast
+            ? "bg-foreground text-background"
+            : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
+        }`}
+        aria-pressed={highContrast}
+      >
+        <Eye className="h-4 w-4" />
+        Alto Contraste
+      </button>
+      <button
+        onClick={toggleUnderlineLinks}
+        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+          underlineLinks
+            ? "bg-foreground text-background"
+            : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
+        }`}
+        aria-pressed={underlineLinks}
+      >
+        <Underline className="h-4 w-4" />
+        Sublinhar Links
+      </button>
+      {hasChanges && (
+        <button
+          onClick={resetAll}
+          className="text-xs text-muted-foreground underline transition hover:text-foreground"
+        >
+          Restaurar padrão
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <>
-      {/* Skip to content */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:shadow-lg"
@@ -78,7 +147,13 @@ const Header = () => {
         Pular para o conteúdo
       </a>
 
-      <header className="seplag-gradient sticky top-0 z-50 shadow-lg">
+      <header
+        className={`sticky top-0 z-50 transition-all duration-500 ${
+          scrolled
+            ? "bg-primary-dark/80 shadow-xl backdrop-blur-xl"
+            : "seplag-gradient shadow-lg"
+        }`}
+      >
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-3">
             {logoUrl ? (
@@ -98,24 +173,33 @@ const Header = () => {
             </div>
           </Link>
 
+          {/* Desktop nav */}
           <div className="hidden items-center gap-1 md:flex">
             <nav className="flex items-center gap-1" aria-label="Navegação principal">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 ${
-                    location.pathname === item.path
-                      ? "bg-primary-foreground/15 text-primary-foreground"
-                      : "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`group relative rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 ${
+                      isActive
+                        ? "text-primary-foreground"
+                        : "text-primary-foreground/70 hover:text-primary-foreground"
+                    }`}
+                  >
+                    {item.label}
+                    {/* Animated underline */}
+                    <span
+                      className={`absolute bottom-0.5 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-secondary transition-all duration-300 ${
+                        isActive ? "w-3/4" : "w-0 group-hover:w-3/4"
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
             </nav>
 
-            {/* Accessibility menu */}
             <Popover>
               <PopoverTrigger asChild>
                 <button
@@ -125,86 +209,23 @@ const Header = () => {
                   <Accessibility className="h-5 w-5" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-64 space-y-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Acessibilidade
-                </p>
-
-                {/* Font size */}
-                <div className="space-y-1.5">
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Type className="h-3.5 w-3.5" /> Tamanho da fonte
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => changeFontSize(-10)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Diminuir fonte"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="min-w-[3ch] text-center text-sm font-semibold text-foreground">
-                      {fontSize}%
-                    </span>
-                    <button
-                      onClick={() => changeFontSize(10)}
-                      className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      aria-label="Aumentar fonte"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* High contrast */}
-                <button
-                  onClick={toggleContrast}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    highContrast
-                      ? "bg-foreground text-background"
-                      : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
-                  }`}
-                  aria-pressed={highContrast}
-                >
-                  <Eye className="h-4 w-4" />
-                  Alto Contraste
-                </button>
-
-                {/* Underline links */}
-                <button
-                  onClick={toggleUnderlineLinks}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                    underlineLinks
-                      ? "bg-foreground text-background"
-                      : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"
-                  }`}
-                  aria-pressed={underlineLinks}
-                >
-                  <Underline className="h-4 w-4" />
-                  Sublinhar Links
-                </button>
-
-                {/* Reset */}
-                {hasChanges && (
-                  <button
-                    onClick={resetAll}
-                    className="text-xs text-muted-foreground underline transition hover:text-foreground"
-                  >
-                    Restaurar padrão
-                  </button>
-                )}
+              <PopoverContent align="end" className="w-64">
+                <AccessibilityMenu />
               </PopoverContent>
             </Popover>
 
             {!user && (
-              <Link to="/login" className="ml-2 flex items-center gap-1 rounded-md bg-primary-foreground/10 px-3 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary-foreground/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary">
+              <Link
+                to="/login"
+                className="ml-2 flex items-center gap-1.5 rounded-md border border-primary-foreground/30 px-3 py-1.5 text-sm font-medium text-primary-foreground transition hover:border-primary-foreground/60 hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+              >
                 <LogIn className="h-4 w-4" /> Entrar
               </Link>
             )}
           </div>
 
+          {/* Mobile */}
           <div className="flex items-center gap-2 md:hidden">
-            {/* Mobile accessibility */}
             <Popover>
               <PopoverTrigger asChild>
                 <button
@@ -214,53 +235,45 @@ const Header = () => {
                   <Accessibility className="h-5 w-5" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent align="end" className="w-64 space-y-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground">Acessibilidade</p>
-                <div className="space-y-1.5">
-                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Type className="h-3.5 w-3.5" /> Tamanho da fonte
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => changeFontSize(-10)} className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground" aria-label="Diminuir fonte"><Minus className="h-4 w-4" /></button>
-                    <span className="min-w-[3ch] text-center text-sm font-semibold text-foreground">{fontSize}%</span>
-                    <button onClick={() => changeFontSize(10)} className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-foreground transition hover:bg-primary hover:text-primary-foreground" aria-label="Aumentar fonte"><Plus className="h-4 w-4" /></button>
-                  </div>
-                </div>
-                <button onClick={toggleContrast} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${highContrast ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"}`} aria-pressed={highContrast}><Eye className="h-4 w-4" /> Alto Contraste</button>
-                <button onClick={toggleUnderlineLinks} className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${underlineLinks ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-primary hover:text-primary-foreground"}`} aria-pressed={underlineLinks}><Underline className="h-4 w-4" /> Sublinhar Links</button>
-                {hasChanges && <button onClick={resetAll} className="text-xs text-muted-foreground underline hover:text-foreground">Restaurar padrão</button>}
+              <PopoverContent align="end" className="w-64">
+                <AccessibilityMenu />
               </PopoverContent>
             </Popover>
 
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="text-primary-foreground">
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <button className="flex h-9 w-9 items-center justify-center rounded-md text-primary-foreground transition hover:bg-primary-foreground/10" aria-label="Abrir menu">
+                  <Menu className="h-6 w-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 seplag-gradient border-primary-light/20">
+                <nav className="mt-8 flex flex-col gap-1" aria-label="Navegação principal">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                        location.pathname === item.path
+                          ? "bg-primary-foreground/15 text-primary-foreground"
+                          : "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  {!user && (
+                    <Link
+                      to="/login"
+                      className="mt-4 flex items-center gap-2 rounded-lg border border-primary-foreground/30 px-4 py-3 text-sm font-medium text-primary-foreground/70 transition hover:bg-primary-foreground/10"
+                    >
+                      <LogIn className="h-4 w-4" /> Entrar
+                    </Link>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {mobileOpen && (
-          <nav className="border-t border-primary-foreground/10 px-4 pb-4 md:hidden" aria-label="Navegação principal">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setMobileOpen(false)}
-                className={`block rounded-md px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary ${
-                  location.pathname === item.path
-                    ? "bg-primary-foreground/15 text-primary-foreground"
-                    : "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {!user && (
-              <Link to="/login" onClick={() => setMobileOpen(false)} className="mt-2 block rounded-md px-4 py-2.5 text-sm font-medium text-primary-foreground/70 hover:bg-primary-foreground/10">
-                <LogIn className="mr-1 inline h-4 w-4" /> Entrar
-              </Link>
-            )}
-          </nav>
-        )}
       </header>
     </>
   );
