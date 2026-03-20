@@ -171,7 +171,7 @@ const Inscricao = () => {
               style={{ lineHeight: "1.1" }}
             >
               Inscrições Abertas –{" "}
-              <span className="text-[#66B2FF]">Auditório SEPLAG</span>
+              <span className="text-[#66B2FF]">Auditório Antônio Mendes</span>
             </motion.h1>
             <motion.p
               variants={reveal}
