@@ -15,9 +15,9 @@ const faqItems = [
       "Acesse a página de Agendamento, preencha o formulário com seus dados pessoais e as informações do evento. Após o envio, a equipe da SEPLAG analisará sua solicitação e responderá em até 48 horas úteis.",
   },
   {
-    question: "Qual a capacidade máxima do auditório?",
+    question: "Qual a capacidade máxima do Auditório Antônio Mendes?",
     answer:
-      "O auditório da SEPLAG comporta até 200 participantes sentados confortavelmente, com acessibilidade para pessoas com mobilidade reduzida.",
+      "O Auditório Antônio Mendes comporta até 200 participantes sentados confortavelmente, com acessibilidade para pessoas com mobilidade reduzida.",
   },
   {
     question: "Quais equipamentos estão disponíveis?",
