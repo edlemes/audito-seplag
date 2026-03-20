@@ -116,7 +116,7 @@ const GestaoConteudo = () => {
       tipo: "carousel", titulo: titulo || null, subtitulo: subtitulo || null,
       imagem_url: newUrl.trim(), ordem: carouselItems.length,
     });
-    if (error) toast.error("Erro ao salvar");
+    if (error) { console.error("Carousel insert error:", error); toast.error("Erro ao salvar: " + error.message); }
     else { toast.success("Slide adicionado!"); setTitulo(""); setSubtitulo(""); setNewUrl(""); loadContent(); }
     setUploading(false);
   };
@@ -134,8 +134,9 @@ const GestaoConteudo = () => {
   };
 
   const handleDelete = async (item: CmsItem) => {
-    await supabase.from("cms_content").delete().eq("id", item.id);
-    toast.success("Item removido!"); loadContent();
+    const { error } = await supabase.from("cms_content").delete().eq("id", item.id);
+    if (error) { console.error("Delete error:", error); toast.error("Erro ao remover: " + error.message); }
+    else { toast.success("Item removido!"); loadContent(); }
   };
 
   const handleReorder = async (index: number, direction: -1 | 1) => {
@@ -155,8 +156,9 @@ const GestaoConteudo = () => {
   const saveEdit = async () => {
     if (!editingId) return;
     if (!editUrl.trim()) return toast.error("O link da imagem é obrigatório");
-    await supabase.from("cms_content").update({ titulo: editTitulo || null, subtitulo: editSubtitulo || null, imagem_url: editUrl.trim() }).eq("id", editingId);
-    toast.success("Slide atualizado!"); setEditingId(null); loadContent();
+    const { error } = await supabase.from("cms_content").update({ titulo: editTitulo || null, subtitulo: editSubtitulo || null, imagem_url: editUrl.trim() }).eq("id", editingId);
+    if (error) { console.error("Edit error:", error); toast.error("Erro ao editar: " + error.message); }
+    else { toast.success("Slide atualizado!"); setEditingId(null); loadContent(); }
   };
 
   // --- Noticias ---
@@ -168,7 +170,7 @@ const GestaoConteudo = () => {
       titulo: noticiaTitulo.trim(), descricao: noticiaDesc.trim() || null,
       imagem_url: noticiaUrl.trim(), data_publicacao: noticiaData, ordem: noticias.length,
     });
-    if (error) toast.error("Erro ao salvar notícia");
+    if (error) { console.error("Noticia insert error:", error); toast.error("Erro ao salvar notícia: " + error.message); }
     else { toast.success("Notícia adicionada!"); setNoticiaTitulo(""); setNoticiaDesc(""); setNoticiaUrl(""); loadNoticias(); }
     setUploading(false);
   };
@@ -184,8 +186,9 @@ const GestaoConteudo = () => {
 
   const saveEditNoticia = async () => {
     if (!editingNoticiaId) return;
-    await supabase.from("noticias").update({ titulo: editNoticiaTitulo, descricao: editNoticiaDesc || null, imagem_url: editNoticiaUrl.trim() }).eq("id", editingNoticiaId);
-    toast.success("Notícia atualizada!"); setEditingNoticiaId(null); loadNoticias();
+    const { error } = await supabase.from("noticias").update({ titulo: editNoticiaTitulo, descricao: editNoticiaDesc || null, imagem_url: editNoticiaUrl.trim() }).eq("id", editingNoticiaId);
+    if (error) { console.error("Noticia edit error:", error); toast.error("Erro ao editar: " + error.message); }
+    else { toast.success("Notícia atualizada!"); setEditingNoticiaId(null); loadNoticias(); }
   };
 
   if (!isAdmin) return null;
@@ -364,7 +367,7 @@ const GestaoConteudo = () => {
                 tipo: "galeria", titulo: galeriaTitulo || null, subtitulo: galeriaSubtitulo || null,
                 imagem_url: galeriaUrl.trim(), ordem: galeriaItems.length,
               });
-              if (error) toast.error("Erro ao salvar");
+              if (error) { console.error("Galeria insert error:", error); toast.error("Erro ao salvar: " + error.message); }
               else { toast.success("Foto adicionada!"); setGaleriaTitulo(""); setGaleriaSubtitulo(""); setGaleriaUrl(""); loadContent(); }
               setUploading(false);
             }} className="rounded-lg border border-dashed border-border p-4">
