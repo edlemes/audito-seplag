@@ -20,12 +20,15 @@ const Header = () => {
   useEffect(() => {
     supabase
       .from("cms_content")
-      .select("imagem_url")
+      .select("imagem_url, subtitulo")
       .eq("tipo", "logo")
       .eq("ativo", true)
       .limit(1)
       .then(({ data }) => {
-        if (data?.[0]) setLogoUrl(data[0].imagem_url);
+        if (data?.[0]) {
+          setLogoUrl(data[0].imagem_url);
+          if (data[0].subtitulo) setLogoSize(parseInt(data[0].subtitulo) || 40);
+        }
       });
   }, []);
 
