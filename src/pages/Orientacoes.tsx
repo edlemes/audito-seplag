@@ -20,7 +20,7 @@ const Orientacoes = () => (
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="mb-2 text-2xl font-bold text-foreground">Orientações de Uso</h1>
         <p className="mb-8 text-muted-foreground">
-          Informações importantes sobre o uso do auditório e documentação necessária.
+          Informações importantes sobre o uso do Auditório Antônio Mendes e documentação necessária.
         </p>
 
         {/* Regras */}
