@@ -33,20 +33,21 @@ const Admin = () => {
   }, [isAdmin, isReadonly]);
 
   const loadData = async () => {
-    // Run queries in parallel
-    const [solsRes, countRes, fbsRes] = await Promise.all([
+    const [solsRes, countRes, fbsRes, inscRes] = await Promise.all([
       supabase.from("solicitacoes_auditorio").select("*").order("created_at", { ascending: false }).limit(200),
       supabase.from("feedback_usuario").select("*", { count: "exact", head: true }),
       supabase.from("feedback_usuario").select("nota_geral, nota_infraestrutura, nota_atendimento, nota_equipamentos"),
+      supabase.from("inscricoes_evento").select("*").order("created_at", { ascending: false }),
     ]);
 
     const sols = solsRes.data || [];
     setSolicitacoes(sols);
+    setInscricoes(inscRes.data || []);
 
     const total = sols.length;
     const pendentes = sols.filter((s) => s.status === "pendente").length;
     const aprovadas = sols.filter((s) => s.status === "aprovada").length;
-    setStats({ total, pendentes, aprovadas, feedbacks: countRes.count || 0 });
+    setStats({ total, pendentes, aprovadas, feedbacks: countRes.count || 0, inscritos: inscRes.data?.length || 0 });
 
     // Pie: solicitations by secretary
     const secMap: Record<string, number> = {};
