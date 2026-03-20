@@ -1,4 +1,5 @@
 import HeroCarousel from "@/components/portal/HeroCarousel";
+import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
