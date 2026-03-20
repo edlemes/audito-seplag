@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import ReportExporter from "@/components/portal/ReportExporter";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { CalendarDays, Users, ClipboardCheck, MessageSquare, LogOut, ShieldCheck, FileSearch, LayoutDashboard, Download } from "lucide-react";
+import { CalendarDays, Users, ClipboardCheck, MessageSquare, LogOut, ShieldCheck, FileSearch, LayoutDashboard, Download, Search, Ticket } from "lucide-react";
 import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useNavigate } from "react-router-dom";
 
 const COLORS = ["#004587", "#0066CC", "#3399FF", "#66B2FF", "#99CCFF", "#CCE5FF", "#1a6fc4", "#2980b9", "#3498db", "#5dade2", "#85c1e9", "#aed6f1", "#d4e6f1", "#1b4f72", "#2471a3"];
