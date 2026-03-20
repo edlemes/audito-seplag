@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
+  const [logoSize, setLogoSize] = useState(40);
   const location = useLocation();
   const { user, isAdmin, isReadonly } = useAuth();
 
@@ -19,12 +20,15 @@ const Header = () => {
   useEffect(() => {
     supabase
       .from("cms_content")
-      .select("imagem_url")
+      .select("imagem_url, subtitulo")
       .eq("tipo", "logo")
       .eq("ativo", true)
       .limit(1)
       .then(({ data }) => {
-        if (data?.[0]) setLogoUrl(data[0].imagem_url);
+        if (data?.[0]) {
+          setLogoUrl(data[0].imagem_url);
+          if (data[0].subtitulo) setLogoSize(parseInt(data[0].subtitulo) || 40);
+        }
       });
   }, []);
 
@@ -157,7 +161,7 @@ const Header = () => {
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-3">
             {logoUrl ? (
-              <img src={logoUrl} alt="Logo SEPLAG Mato Grosso" className="h-10 w-10 rounded-lg object-contain" />
+              <img src={logoUrl} alt="Logo SEPLAG Mato Grosso" style={{ height: logoSize, width: logoSize }} className="rounded-lg object-contain" />
             ) : (
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
                 <Building2 className="h-6 w-6 text-secondary-foreground" />

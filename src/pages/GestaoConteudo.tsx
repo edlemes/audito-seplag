@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, ArrowLeft, Pencil, Save, Link2, Newspaper, Type, Camera } from "lucide-react";
+import { Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, ArrowLeft, Pencil, Save, Link2, Newspaper, Type, Camera, Maximize2 } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
@@ -36,6 +37,7 @@ const GestaoConteudo = () => {
   const [carouselItems, setCarouselItems] = useState<CmsItem[]>([]);
   const [galeriaItems, setGaleriaItems] = useState<CmsItem[]>([]);
   const [logoItem, setLogoItem] = useState<CmsItem | null>(null);
+  const [logoSize, setLogoSize] = useState(40);
   const [splashNomeItem, setSplashNomeItem] = useState<CmsItem | null>(null);
   const [uploading, setUploading] = useState(false);
   const [newUrl, setNewUrl] = useState("");
@@ -70,7 +72,9 @@ const GestaoConteudo = () => {
     if (data) {
       setCarouselItems(data.filter((d) => d.tipo === "carousel"));
       setGaleriaItems(data.filter((d) => d.tipo === "galeria"));
-      setLogoItem(data.find((d) => d.tipo === "logo") || null);
+      const foundLogo = data.find((d) => d.tipo === "logo") || null;
+      setLogoItem(foundLogo);
+      if (foundLogo?.subtitulo) setLogoSize(parseInt(foundLogo.subtitulo) || 40);
       const nome = data.find((d) => d.tipo === "splash_nome");
       setSplashNomeItem(nome || null);
       if (nome?.titulo) setSplashNome(nome.titulo);
@@ -219,7 +223,7 @@ const GestaoConteudo = () => {
             <div className="flex items-center gap-6">
               {logoItem ? (
                 <div className="relative">
-                  <img src={logoItem.imagem_url} alt="Logo" className="h-20 w-20 rounded-lg border border-border object-contain" />
+                  <img src={logoItem.imagem_url} alt="Logo" style={{ height: logoSize, width: logoSize }} className="rounded-lg border border-border object-contain" />
                   <button onClick={() => handleDelete(logoItem)} className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-destructive-foreground">
                     <Trash2 className="h-3 w-3" />
                   </button>
@@ -229,15 +233,51 @@ const GestaoConteudo = () => {
                   <ImageIcon className="h-8 w-8 text-muted-foreground" />
                 </div>
               )}
-              <div>
-                <Label htmlFor="logo-upload" className="cursor-pointer">
-                  <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90">
-                    <Plus className="h-4 w-4" />
-                    {logoItem ? "Trocar Logo" : "Enviar Logo"}
+              <div className="flex-1 space-y-3">
+                <div>
+                  <Label htmlFor="logo-upload" className="cursor-pointer">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:bg-primary/90">
+                      <Plus className="h-4 w-4" />
+                      {logoItem ? "Trocar Logo" : "Enviar Logo"}
+                    </div>
+                  </Label>
+                  <input id="logo-upload" type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleUploadLogo(e.target.files[0])} disabled={uploading} />
+                  <p className="mt-1 text-xs text-muted-foreground">PNG ou JPG recomendado. Usada na splash e no portal.</p>
+                </div>
+
+                {logoItem && (
+                  <div className="rounded-lg border border-border bg-muted/30 p-3">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                        <Maximize2 className="h-3.5 w-3.5 text-primary" /> Tamanho da Logo
+                      </span>
+                      <span className="text-xs font-semibold text-primary">{logoSize}px</span>
+                    </div>
+                    <Slider
+                      value={[logoSize]}
+                      onValueChange={(v) => setLogoSize(v[0])}
+                      min={24}
+                      max={96}
+                      step={4}
+                      className="w-full"
+                    />
+                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-muted-foreground">
+                      <span>24px</span>
+                      <span>96px</span>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="mt-2 h-7 gap-1 text-xs"
+                      onClick={async () => {
+                        await supabase.from("cms_content").update({ subtitulo: String(logoSize) }).eq("id", logoItem.id);
+                        toast.success("Tamanho da logo salvo!");
+                        loadContent();
+                      }}
+                    >
+                      <Save className="h-3 w-3" /> Salvar Tamanho
+                    </Button>
                   </div>
-                </Label>
-                <input id="logo-upload" type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleUploadLogo(e.target.files[0])} disabled={uploading} />
-                <p className="mt-1 text-xs text-muted-foreground">PNG ou JPG recomendado. Usada na splash e no portal.</p>
+                )}
               </div>
             </div>
           </div>
