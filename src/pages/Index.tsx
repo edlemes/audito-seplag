@@ -1,10 +1,17 @@
+import { motion } from "framer-motion";
 import HeroCarousel from "@/components/portal/HeroCarousel";
+import QuickActions from "@/components/portal/QuickActions";
 import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { CalendarPlus, Mic2, Monitor, Users, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
+
+const reveal = {
+  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+};
 
 const features = [
   { icon: Monitor, title: "Projeção HD", desc: "Tela de projeção e equipamentos audiovisuais modernos" },
@@ -19,8 +26,18 @@ const Index = () => (
     <main id="main-content">
       <HeroCarousel />
 
+      {/* Quick Actions */}
+      <QuickActions />
+
       {/* Calendário de Ocupação */}
-      <section className="bg-slate-50 py-16">
+      <motion.section
+        className="bg-muted/50 py-16"
+        variants={reveal}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="container mx-auto px-4">
           <h2 className="mb-2 text-center text-3xl font-bold text-foreground">
             Consulte a Disponibilidade
@@ -32,10 +49,17 @@ const Index = () => (
             <CalendarioOcupacao isAdmin={false} />
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Features */}
-      <section className="py-16">
+      <motion.section
+        className="py-16"
+        variants={reveal}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="container mx-auto px-4">
           <h2 className="mb-2 text-center text-3xl font-bold text-foreground">
             Recursos do Auditório
@@ -44,24 +68,38 @@ const Index = () => (
             Infraestrutura completa para seus eventos institucionais
           </p>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="glass-card group rounded-xl p-6 text-center transition-all hover:-translate-y-1 hover:shadow-xl">
+            {features.map(({ icon: Icon, title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-card group rounded-xl p-6 text-center transition-all hover:-translate-y-1 hover:shadow-xl active:scale-[0.97]"
+              >
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 transition-colors group-hover:bg-primary/20">
                   <Icon className="h-7 w-7 text-primary" />
                 </div>
                 <h3 className="mb-1 font-semibold text-foreground">{title}</h3>
                 <p className="text-sm text-muted-foreground">{desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Últimos Eventos */}
       <NoticiasSection />
 
       {/* CTA */}
-      <section className="seplag-gradient py-12">
+      <motion.section
+        className="seplag-gradient py-12"
+        variants={reveal}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="container mx-auto flex flex-col items-center gap-4 px-4 text-center">
           <h2 className="text-2xl font-bold text-primary-foreground">
             Precisa do auditório para seu evento?
@@ -71,13 +109,13 @@ const Index = () => (
           </p>
           <Link
             to="/agendamento"
-            className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 font-semibold text-secondary-foreground shadow-lg transition hover:bg-secondary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 font-semibold text-secondary-foreground shadow-lg transition hover:bg-secondary/90 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
           >
             <CalendarPlus className="h-5 w-5" />
             Solicitar Agendamento
           </Link>
         </div>
-      </section>
+      </motion.section>
     </main>
 
     <Footer />
