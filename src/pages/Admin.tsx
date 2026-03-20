@@ -261,7 +261,6 @@ const Admin = () => {
               <InscricoesTab inscricoes={inscricoes} searchInscricao={searchInscricao} setSearchInscricao={setSearchInscricao} filterOrgao={filterOrgao} setFilterOrgao={setFilterOrgao} />
             </TabsContent>
           </Tabs>
-          </div>
         </div>
       </div>
       <Footer />
