@@ -134,8 +134,9 @@ const GestaoConteudo = () => {
   };
 
   const handleDelete = async (item: CmsItem) => {
-    await supabase.from("cms_content").delete().eq("id", item.id);
-    toast.success("Item removido!"); loadContent();
+    const { error } = await supabase.from("cms_content").delete().eq("id", item.id);
+    if (error) { console.error("Delete error:", error); toast.error("Erro ao remover: " + error.message); }
+    else { toast.success("Item removido!"); loadContent(); }
   };
 
   const handleReorder = async (index: number, direction: -1 | 1) => {
