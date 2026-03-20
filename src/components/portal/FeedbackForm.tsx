@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import StarRating from "./feedback/StarRating";
+import SentimentScale from "./feedback/SentimentScale";
 import NpsScale from "./feedback/NpsScale";
 
 const initialData: AvaliacaoFeedback = {
@@ -140,10 +140,7 @@ const FeedbackForm = () => {
   }
 
   const RatingRow = ({ label, field }: { label: string; field: keyof AvaliacaoFeedback }) => (
-    <div className="flex items-center justify-between gap-4">
-      <Label className="text-sm font-medium">{label}</Label>
-      <StarRating value={data[field] as number} onChange={(v) => set(field, v)} />
-    </div>
+    <SentimentScale label={label} value={data[field] as number} onChange={(v) => set(field, v)} />
   );
 
   return (
