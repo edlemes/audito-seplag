@@ -45,7 +45,6 @@ const DATAS_INSTITUCIONAIS: Record<string, DataInstitucional> = {
   "2026-07-30": { titulo: "Pagamento + 1ª Parcela 13º", tipo: "pagamento" },
   "2026-08-28": { titulo: "Pagamento Salarial", tipo: "pagamento" },
   "2026-09-29": { titulo: "Pagamento Salarial", tipo: "pagamento" },
-  "2026-10-28": { titulo: "Dia do Servidor / Pagamento", tipo: "pagamento" },
   "2026-11-27": { titulo: "Pagamento Salarial", tipo: "pagamento" },
   "2026-12-18": { titulo: "2ª Parcela 13º / Parcela Única", tipo: "pagamento" },
   "2026-12-23": { titulo: "Pagamento Salarial", tipo: "pagamento" },
