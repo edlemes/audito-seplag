@@ -155,8 +155,9 @@ const GestaoConteudo = () => {
   const saveEdit = async () => {
     if (!editingId) return;
     if (!editUrl.trim()) return toast.error("O link da imagem é obrigatório");
-    await supabase.from("cms_content").update({ titulo: editTitulo || null, subtitulo: editSubtitulo || null, imagem_url: editUrl.trim() }).eq("id", editingId);
-    toast.success("Slide atualizado!"); setEditingId(null); loadContent();
+    const { error } = await supabase.from("cms_content").update({ titulo: editTitulo || null, subtitulo: editSubtitulo || null, imagem_url: editUrl.trim() }).eq("id", editingId);
+    if (error) { console.error("Edit error:", error); toast.error("Erro ao editar: " + error.message); }
+    else { toast.success("Slide atualizado!"); setEditingId(null); loadContent(); }
   };
 
   // --- Noticias ---
