@@ -72,7 +72,9 @@ const GestaoConteudo = () => {
     if (data) {
       setCarouselItems(data.filter((d) => d.tipo === "carousel"));
       setGaleriaItems(data.filter((d) => d.tipo === "galeria"));
-      setLogoItem(data.find((d) => d.tipo === "logo") || null);
+      const foundLogo = data.find((d) => d.tipo === "logo") || null;
+      setLogoItem(foundLogo);
+      if (foundLogo?.subtitulo) setLogoSize(parseInt(foundLogo.subtitulo) || 40);
       const nome = data.find((d) => d.tipo === "splash_nome");
       setSplashNomeItem(nome || null);
       if (nome?.titulo) setSplashNome(nome.titulo);
