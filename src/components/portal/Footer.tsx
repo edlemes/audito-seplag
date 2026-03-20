@@ -24,6 +24,7 @@ const Footer = () => {
     { label: "Agendamento", to: "/agendamento" },
     { label: "Orientações", to: "/orientacoes" },
     { label: "Avaliação", to: "/avaliacao" },
+    { label: "Dúvidas (FAQ)", to: "/faq" },
   ];
 
   return (

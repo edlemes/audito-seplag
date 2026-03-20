@@ -1,4 +1,4 @@
-import { Building2, Menu, X, LogIn, Accessibility, Plus, Minus, Eye, Type, Underline } from "lucide-react";
+import { Building2, Menu, LogIn, Accessibility, Plus, Minus, Eye, Type, Underline, ShieldCheck } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -69,7 +69,7 @@ const Header = () => {
     { label: "Agendamento", path: "/agendamento" },
     { label: "Orientações", path: "/orientacoes" },
     { label: "Avaliação", path: "/avaliacao" },
-    ...(isAdmin || isReadonly ? [{ label: "Admin", path: "/admin" }] : []),
+    { label: "Dúvidas (FAQ)", path: "/faq" },
   ];
 
   const hasChanges = fontSize !== 100 || highContrast || underlineLinks;
@@ -182,14 +182,13 @@ const Header = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className={`group relative rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 ${
+                    className={`group relative rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 ${
                       isActive
                         ? "text-primary-foreground"
                         : "text-primary-foreground/70 hover:text-primary-foreground"
                     }`}
                   >
                     {item.label}
-                    {/* Animated underline */}
                     <span
                       className={`absolute bottom-0.5 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-secondary transition-all duration-300 ${
                         isActive ? "w-3/4" : "w-0 group-hover:w-3/4"
@@ -214,14 +213,23 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            {!user && (
+            {/* Admin button or Login */}
+            {user && (isAdmin || isReadonly) ? (
+              <Link
+                to="/admin"
+                className="ml-2 flex items-center gap-1.5 rounded-md bg-secondary px-3 py-1.5 text-sm font-semibold text-secondary-foreground shadow-sm transition hover:bg-secondary/90 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Painel Admin
+              </Link>
+            ) : !user ? (
               <Link
                 to="/login"
                 className="ml-2 flex items-center gap-1.5 rounded-md border border-primary-foreground/30 px-3 py-1.5 text-sm font-medium text-primary-foreground transition hover:border-primary-foreground/60 hover:bg-primary-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
               >
                 <LogIn className="h-4 w-4" /> Entrar
               </Link>
-            )}
+            ) : null}
           </div>
 
           {/* Mobile */}
@@ -261,14 +269,22 @@ const Header = () => {
                       {item.label}
                     </Link>
                   ))}
-                  {!user && (
+
+                  {user && (isAdmin || isReadonly) ? (
+                    <Link
+                      to="/admin"
+                      className="mt-4 flex items-center gap-2 rounded-lg bg-secondary px-4 py-3 text-sm font-semibold text-secondary-foreground transition hover:bg-secondary/90"
+                    >
+                      <ShieldCheck className="h-4 w-4" /> Painel Admin
+                    </Link>
+                  ) : !user ? (
                     <Link
                       to="/login"
                       className="mt-4 flex items-center gap-2 rounded-lg border border-primary-foreground/30 px-4 py-3 text-sm font-medium text-primary-foreground/70 transition hover:bg-primary-foreground/10"
                     >
                       <LogIn className="h-4 w-4" /> Entrar
                     </Link>
-                  )}
+                  ) : null}
                 </nav>
               </SheetContent>
             </Sheet>
