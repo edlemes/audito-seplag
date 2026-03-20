@@ -169,7 +169,7 @@ const GestaoConteudo = () => {
       titulo: noticiaTitulo.trim(), descricao: noticiaDesc.trim() || null,
       imagem_url: noticiaUrl.trim(), data_publicacao: noticiaData, ordem: noticias.length,
     });
-    if (error) toast.error("Erro ao salvar notícia");
+    if (error) { console.error("Noticia insert error:", error); toast.error("Erro ao salvar notícia: " + error.message); }
     else { toast.success("Notícia adicionada!"); setNoticiaTitulo(""); setNoticiaDesc(""); setNoticiaUrl(""); loadNoticias(); }
     setUploading(false);
   };
