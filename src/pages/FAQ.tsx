@@ -45,7 +45,7 @@ const faqItems = [
       "Sim. Entre em contato com a administração pelo telefone (65) 3613-3300 ou pelo WhatsApp disponível no site com antecedência mínima de 48 horas.",
   },
   {
-    question: "Quem pode solicitar o uso do auditório?",
+    question: "Quem pode solicitar o uso do Auditório Antônio Mendes?",
     answer:
       "Servidores públicos estaduais e representantes de órgãos vinculados ao Governo do Estado de Mato Grosso podem solicitar o espaço para eventos institucionais, capacitações e reuniões.",
   },
