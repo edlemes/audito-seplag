@@ -34,6 +34,7 @@ interface Noticia {
 const GestaoConteudo = () => {
   const { isAdmin } = useAuth();
   const [carouselItems, setCarouselItems] = useState<CmsItem[]>([]);
+  const [galeriaItems, setGaleriaItems] = useState<CmsItem[]>([]);
   const [logoItem, setLogoItem] = useState<CmsItem | null>(null);
   const [splashNomeItem, setSplashNomeItem] = useState<CmsItem | null>(null);
   const [uploading, setUploading] = useState(false);
