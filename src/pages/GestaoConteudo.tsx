@@ -69,6 +69,7 @@ const GestaoConteudo = () => {
     const { data } = await supabase.from("cms_content").select("*").order("ordem", { ascending: true });
     if (data) {
       setCarouselItems(data.filter((d) => d.tipo === "carousel"));
+      setGaleriaItems(data.filter((d) => d.tipo === "galeria"));
       setLogoItem(data.find((d) => d.tipo === "logo") || null);
       const nome = data.find((d) => d.tipo === "splash_nome");
       setSplashNomeItem(nome || null);
