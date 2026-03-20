@@ -41,6 +41,9 @@ const Index = () => (
         </div>
       </motion.section>
 
+      {/* Galeria de Eventos */}
+      <GaleriaEventos />
+
       {/* Últimos Eventos */}
       <NoticiasSection />
 
