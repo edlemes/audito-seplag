@@ -16,6 +16,83 @@ const COLORS = ["#004587", "#0066CC", "#3399FF", "#66B2FF", "#99CCFF", "#CCE5FF"
 
 const statusLabels: Record<string, string> = { pendente: "Pendente", aprovada: "Aprovada", recusada: "Recusada", cancelada: "Cancelada" };
 
+const exportCSV = (data: any[]) => {
+  if (!data.length) return;
+  const headers = ["Nome", "Email", "Telefone", "Órgão", "Cargo", "Data"];
+  const rows = data.map((r) => [r.nome, r.email, r.telefone || "", r.orgao, r.cargo || "", new Date(r.created_at).toLocaleDateString("pt-BR")]);
+  const csv = [headers, ...rows].map((r) => r.map((c: string) => `"${c}"`).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `inscritos_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+const InscricoesTab = ({ inscricoes, searchInscricao, setSearchInscricao, filterOrgao, setFilterOrgao }: {
+  inscricoes: any[]; searchInscricao: string; setSearchInscricao: (v: string) => void; filterOrgao: string; setFilterOrgao: (v: string) => void;
+}) => {
+  const orgaos = useMemo(() => [...new Set(inscricoes.map((i) => i.orgao))].sort(), [inscricoes]);
+  const filtered = useMemo(() => {
+    return inscricoes.filter((i) => {
+      const matchSearch = !searchInscricao || i.nome?.toLowerCase().includes(searchInscricao.toLowerCase()) || i.email?.toLowerCase().includes(searchInscricao.toLowerCase());
+      const matchOrgao = !filterOrgao || i.orgao === filterOrgao;
+      return matchSearch && matchOrgao;
+    });
+  }, [inscricoes, searchInscricao, filterOrgao]);
+
+  return (
+    <div className="rounded-xl border border-border bg-card">
+      <div className="flex flex-wrap items-center gap-3 border-b border-border p-4">
+        <h3 className="font-semibold text-foreground">Inscritos ({filtered.length})</h3>
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input placeholder="Buscar nome ou email..." value={searchInscricao} onChange={(e) => setSearchInscricao(e.target.value)} className="h-8 w-48 pl-8 text-xs" />
+          </div>
+          <select value={filterOrgao} onChange={(e) => setFilterOrgao(e.target.value)} className="h-8 rounded-md border border-input bg-background px-2 text-xs text-foreground">
+            <option value="">Todos os órgãos</option>
+            {orgaos.map((o) => <option key={o} value={o}>{o}</option>)}
+          </select>
+          <Button size="sm" variant="outline" className="h-8 gap-1 text-xs" onClick={() => exportCSV(filtered)}>
+            <Download className="h-3.5 w-3.5" /> CSV
+          </Button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-border bg-muted/50">
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nome</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Email</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Telefone</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Órgão</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Cargo</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((i: any) => (
+              <tr key={i.id} className="border-b border-border last:border-0">
+                <td className="px-4 py-3 font-medium text-foreground">{i.nome}</td>
+                <td className="px-4 py-3 text-muted-foreground">{i.email}</td>
+                <td className="px-4 py-3 text-muted-foreground">{i.telefone || "—"}</td>
+                <td className="px-4 py-3 text-muted-foreground">{i.orgao}</td>
+                <td className="px-4 py-3 text-muted-foreground">{i.cargo || "—"}</td>
+                <td className="px-4 py-3 text-muted-foreground">{new Date(i.created_at).toLocaleDateString("pt-BR")}</td>
+              </tr>
+            ))}
+            {filtered.length === 0 && (
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Nenhuma inscrição encontrada</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const Admin = () => {
   const { user, isAdmin, isReadonly, signOut } = useAuth();
   const navigate = useNavigate();
