@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import StarRating from "./feedback/StarRating";
+import SentimentScale from "./feedback/SentimentScale";
 import NpsScale from "./feedback/NpsScale";
 
 const initialData: AvaliacaoFeedback = {
