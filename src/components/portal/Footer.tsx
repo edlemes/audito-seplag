@@ -48,10 +48,46 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Right — copyright */}
-        <p className="text-[11px] text-white/40">
-          © {new Date().getFullYear()} SEPLAG – Todos os direitos reservados.
-        </p>
+        {/* Right — accessibility + copyright */}
+        <div className="flex flex-col items-center gap-2 md:items-end">
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => {
+                const root = document.documentElement;
+                const current = parseFloat(root.style.fontSize || "100");
+                root.style.fontSize = Math.min(current + 10, 150) + "%";
+              }}
+              className="rounded p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              aria-label="Aumentar fonte"
+              title="Aumentar fonte"
+            >
+              <AArrowUp className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => {
+                const root = document.documentElement;
+                const current = parseFloat(root.style.fontSize || "100");
+                root.style.fontSize = Math.max(current - 10, 80) + "%";
+              }}
+              className="rounded p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              aria-label="Diminuir fonte"
+              title="Diminuir fonte"
+            >
+              <AArrowDown className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => document.documentElement.classList.toggle("high-contrast")}
+              className="rounded p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              aria-label="Alternar alto contraste"
+              title="Alto contraste"
+            >
+              <SunMoon className="h-4 w-4" />
+            </button>
+          </div>
+          <p className="text-[11px] text-white/40">
+            © {new Date().getFullYear()} SEPLAG – Todos os direitos reservados.
+          </p>
+        </div>
       </div>
     </footer>
   );
