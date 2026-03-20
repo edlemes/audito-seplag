@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import HeroCarousel from "@/components/portal/HeroCarousel";
 import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
+import GaleriaEventos from "@/components/portal/GaleriaEventos";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { CalendarPlus } from "lucide-react";
@@ -39,6 +40,9 @@ const Index = () => (
           </div>
         </div>
       </motion.section>
+
+      {/* Galeria de Eventos */}
+      <GaleriaEventos />
 
       {/* Últimos Eventos */}
       <NoticiasSection />
