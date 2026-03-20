@@ -193,60 +193,74 @@ const Admin = () => {
             <CalendarioOcupacao isAdmin={isAdmin} />
           </div>
 
-          {/* Solicitations table */}
-          <div className="rounded-xl border border-border bg-card">
-            <div className="border-b border-border p-4">
-              <h3 className="font-semibold text-foreground">Solicitações Recentes</h3>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border bg-muted/50">
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Evento</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Solicitante</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Data</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Secretaria</th>
-                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
-                    {isAdmin && <th className="px-4 py-3 text-left font-medium text-muted-foreground">Ações</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {solicitacoes.map((s) => (
-                    <tr key={s.id} className="border-b border-border last:border-0">
-                      <td className="px-4 py-3 font-medium text-foreground">{s.titulo_evento}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{s.nome_solicitante}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{new Date(s.data_evento).toLocaleDateString("pt-BR")}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{s.secretaria_atendida}</td>
-                      <td className="px-4 py-3">
-                        <span className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          s.status === "aprovada" ? "bg-success/10 text-success" :
-                          s.status === "pendente" ? "bg-warning/10 text-warning" :
-                          s.status === "recusada" ? "bg-destructive/10 text-destructive" :
-                          "bg-muted text-muted-foreground"
-                        }`}>
-                          {statusLabels[s.status] || s.status}
-                        </span>
-                      </td>
-                      {isAdmin && (
-                        <td className="px-4 py-3">
-                          <div className="flex gap-1">
-                            {s.status === "pendente" && (
-                              <>
-                                <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => updateStatus(s.id, "aprovada")}>Aprovar</Button>
-                                <Button size="sm" variant="outline" className="h-7 text-xs text-destructive" onClick={() => updateStatus(s.id, "recusada")}>Recusar</Button>
-                              </>
-                            )}
-                          </div>
-                        </td>
+          {/* Tabs: Solicitações + Inscrições */}
+          <Tabs defaultValue="solicitacoes" className="mb-8">
+            <TabsList className="mb-4">
+              <TabsTrigger value="solicitacoes">Solicitações</TabsTrigger>
+              <TabsTrigger value="inscricoes">Inscrições Evento</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="solicitacoes">
+              <div className="rounded-xl border border-border bg-card">
+                <div className="border-b border-border p-4">
+                  <h3 className="font-semibold text-foreground">Solicitações Recentes</h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/50">
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Evento</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Solicitante</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Data</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Secretaria</th>
+                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Status</th>
+                        {isAdmin && <th className="px-4 py-3 text-left font-medium text-muted-foreground">Ações</th>}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {solicitacoes.map((s) => (
+                        <tr key={s.id} className="border-b border-border last:border-0">
+                          <td className="px-4 py-3 font-medium text-foreground">{s.titulo_evento}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{s.nome_solicitante}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{new Date(s.data_evento).toLocaleDateString("pt-BR")}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{s.secretaria_atendida}</td>
+                          <td className="px-4 py-3">
+                            <span className={`rounded-full px-2 py-1 text-xs font-medium ${
+                              s.status === "aprovada" ? "bg-success/10 text-success" :
+                              s.status === "pendente" ? "bg-warning/10 text-warning" :
+                              s.status === "recusada" ? "bg-destructive/10 text-destructive" :
+                              "bg-muted text-muted-foreground"
+                            }`}>
+                              {statusLabels[s.status] || s.status}
+                            </span>
+                          </td>
+                          {isAdmin && (
+                            <td className="px-4 py-3">
+                              <div className="flex gap-1">
+                                {s.status === "pendente" && (
+                                  <>
+                                    <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => updateStatus(s.id, "aprovada")}>Aprovar</Button>
+                                    <Button size="sm" variant="outline" className="h-7 text-xs text-destructive" onClick={() => updateStatus(s.id, "recusada")}>Recusar</Button>
+                                  </>
+                                )}
+                              </div>
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                      {solicitacoes.length === 0 && (
+                        <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Nenhuma solicitação encontrada</td></tr>
                       )}
-                    </tr>
-                  ))}
-                  {solicitacoes.length === 0 && (
-                    <tr><td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">Nenhuma solicitação encontrada</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="inscricoes">
+              <InscricoesTab inscricoes={inscricoes} searchInscricao={searchInscricao} setSearchInscricao={setSearchInscricao} filterOrgao={filterOrgao} setFilterOrgao={setFilterOrgao} />
+            </TabsContent>
+          </Tabs>
           </div>
         </div>
       </div>
