@@ -147,7 +147,7 @@ const Agendamento = () => {
           <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
             {step === 0 && <FormSolicitante data={solicitante} onChange={setSolicitante} />}
             {step === 1 && <FormEvento data={evento} onChange={setEvento} />}
-            {step === 2 && <FormDocumentacao file={termoAssinado} onFileChange={setTermoAssinado} />}
+            {step === 2 && <FormDocumentacao file={termoAssinado} onFileChange={setTermoAssinado} solicitante={solicitante} evento={evento} />}
           </div>
 
           {/* Navigation */}

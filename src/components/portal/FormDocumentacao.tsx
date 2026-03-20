@@ -1,20 +1,31 @@
-import { Download, Upload, FileCheck, Info } from "lucide-react";
+import { Download, Upload, FileCheck, Info, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRef, useState } from "react";
+import { gerarTermoResponsabilidade } from "@/lib/gerarTermoPDF";
+import type { DadosSolicitante, DadosEvento } from "@/types/agendamento";
 
 interface Props {
   file: File | null;
   onFileChange: (file: File | null) => void;
+  solicitante?: DadosSolicitante;
+  evento?: DadosEvento;
 }
 
-const FormDocumentacao = ({ file, onFileChange }: Props) => {
+const FormDocumentacao = ({ file, onFileChange, solicitante, evento }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
   const handleFile = (f: File | null) => {
     if (f && f.type === "application/pdf") onFileChange(f);
   };
+
+  const handleGerarTermo = () => {
+    if (!solicitante || !evento) return;
+    gerarTermoResponsabilidade(solicitante, evento);
+  };
+
+  const canGenerate = solicitante?.nome && solicitante?.cpf && evento?.titulo;
 
   return (
     <div className="space-y-6">
@@ -27,19 +38,28 @@ const FormDocumentacao = ({ file, onFileChange }: Props) => {
           <span className="font-semibold">Orientações para Assinatura via SigDoc</span>
         </div>
         <ol className="ml-6 list-decimal space-y-1 text-sm text-muted-foreground">
-          <li>Baixe o Termo de Responsabilidade clicando no botão abaixo.</li>
+          <li>Clique em <strong>"Gerar Termo Preenchido"</strong> para baixar o PDF com seus dados.</li>
           <li>Acesse o sistema <strong>SigDoc</strong> do Governo de MT.</li>
           <li>Faça upload do PDF e assine digitalmente.</li>
           <li>Baixe o documento assinado e faça upload nesta página.</li>
         </ol>
       </div>
 
-      {/* Download */}
-      <div>
-        <Button variant="outline" className="gap-2" onClick={() => alert("Download do Termo de Responsabilidade (PDF modelo)")}>
-          <Download className="h-4 w-4" />
-          Baixar Termo de Responsabilidade (PDF)
+      {/* Gerar Termo Preenchido */}
+      <div className="flex flex-wrap gap-3">
+        <Button
+          onClick={handleGerarTermo}
+          disabled={!canGenerate}
+          className="gap-2 bg-primary hover:bg-primary/90"
+        >
+          <FileDown className="h-4 w-4" />
+          Gerar Termo de Responsabilidade Preenchido
         </Button>
+        {!canGenerate && (
+          <p className="self-center text-xs text-muted-foreground">
+            Preencha os dados do solicitante e evento primeiro.
+          </p>
+        )}
       </div>
 
       {/* Upload */}
