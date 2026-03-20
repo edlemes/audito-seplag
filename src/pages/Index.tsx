@@ -19,6 +19,21 @@ const Index = () => (
     <main id="main-content">
       <HeroCarousel />
 
+      {/* Calendário de Ocupação */}
+      <section className="bg-slate-50 py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="mb-2 text-center text-3xl font-bold text-foreground">
+            Consulte a Disponibilidade
+          </h2>
+          <p className="mb-8 text-center text-muted-foreground">
+            Verifique as datas disponíveis antes de solicitar seu agendamento
+          </p>
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl shadow-lg">
+            <CalendarioOcupacao isAdmin={false} />
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section className="py-16">
         <div className="container mx-auto px-4">
