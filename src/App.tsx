@@ -15,6 +15,7 @@ import Admin from "./pages/Admin.tsx";
 import GestaoUsuarios from "./pages/GestaoUsuarios.tsx";
 import GestaoConteudo from "./pages/GestaoConteudo.tsx";
 import Vistoria from "./pages/Vistoria.tsx";
+import FAQ from "./pages/FAQ.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
