@@ -23,9 +23,8 @@ const Header = () => {
       .eq("tipo", "logo")
       .eq("ativo", true)
       .limit(1)
-      .single()
       .then(({ data }) => {
-        if (data) setLogoUrl(data.imagem_url);
+        if (data?.[0]) setLogoUrl(data[0].imagem_url);
       });
   }, []);
 
