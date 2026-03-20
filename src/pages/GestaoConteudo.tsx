@@ -116,7 +116,7 @@ const GestaoConteudo = () => {
       tipo: "carousel", titulo: titulo || null, subtitulo: subtitulo || null,
       imagem_url: newUrl.trim(), ordem: carouselItems.length,
     });
-    if (error) toast.error("Erro ao salvar");
+    if (error) { console.error("Carousel insert error:", error); toast.error("Erro ao salvar: " + error.message); }
     else { toast.success("Slide adicionado!"); setTitulo(""); setSubtitulo(""); setNewUrl(""); loadContent(); }
     setUploading(false);
   };
