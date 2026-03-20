@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import HeroCarousel from "@/components/portal/HeroCarousel";
-import QuickActions from "@/components/portal/QuickActions";
 import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import Header from "@/components/portal/Header";
@@ -18,9 +17,6 @@ const Index = () => (
     <Header />
     <main id="main-content">
       <HeroCarousel />
-
-      {/* Quick Actions */}
-      <QuickActions />
 
       {/* Calendário de Ocupação */}
       <motion.section
