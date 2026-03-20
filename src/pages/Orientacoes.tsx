@@ -4,9 +4,9 @@ import { Download, FileText, Info, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const orientacoes = [
-  "O auditório deve ser solicitado com no mínimo 5 dias úteis de antecedência.",
+  "O Auditório Antônio Mendes deve ser solicitado com no mínimo 5 dias úteis de antecedência.",
   "O uso é exclusivo para atividades institucionais de órgãos do Governo de MT.",
-  "É proibido o consumo de alimentos e bebidas dentro do auditório.",
+  "É proibido o consumo de alimentos e bebidas dentro do Auditório Antônio Mendes.",
   "O solicitante é responsável pela organização e limpeza do espaço.",
   "Equipamentos audiovisuais devem ser solicitados previamente.",
   "O horário de funcionamento é das 8h às 18h, de segunda a sexta-feira.",
