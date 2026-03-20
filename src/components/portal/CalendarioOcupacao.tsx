@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, ChevronRight, Lock, Unlock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, Unlock, DollarSign, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import DATAS_INSTITUCIONAIS, { type DataInstitucional } from "./datasInstitucionais";
 
 interface Evento {
   id: string;
@@ -112,6 +114,11 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
     return blockedDates.find((b) => b.data === dateStr);
   };
 
+  const getInstitucionalForDay = (day: number): DataInstitucional | undefined => {
+    const dateStr = formatDateStr(day);
+    return DATAS_INSTITUCIONAIS[dateStr];
+  };
+
   const handleDayClick = (day: number) => {
     const evts = getEventsForDay(day);
     setSelectedDay(new Date(year, month, day));
@@ -161,21 +168,32 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
   for (let day = 1; day <= daysInMonth; day++) {
     const dayEvts = getEventsForDay(day);
     const blocked = getBlockedForDay(day);
+    const institucional = getInstitucionalForDay(day);
     const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
 
-    cells.push(
+    const cellContent = (
       <div
         key={day}
         onClick={() => handleDayClick(day)}
         className={`relative h-24 cursor-pointer border border-border/30 p-1 transition-colors hover:bg-accent/50 ${
           isToday ? "bg-primary/5 ring-1 ring-primary" : ""
-        } ${blocked ? "bg-destructive/10" : ""}`}
+        } ${blocked ? "bg-destructive/10" : ""} ${
+          institucional?.tipo === "feriado" ? "bg-muted/40" : ""
+        } ${institucional?.tipo === "pagamento" ? "border-l-2 border-l-primary" : ""}`}
       >
         <div className="flex items-center justify-between">
           <span className={`text-xs font-medium ${isToday ? "text-primary font-bold" : "text-foreground"}`}>
             {day}
           </span>
-          {blocked && <Lock className="h-3 w-3 text-destructive" />}
+          <div className="flex items-center gap-0.5">
+            {institucional?.tipo === "pagamento" && (
+              <DollarSign className="h-3 w-3 text-primary" />
+            )}
+            {institucional?.tipo === "feriado" && (
+              <Star className="h-3 w-3 text-amber-500" />
+            )}
+            {blocked && <Lock className="h-3 w-3 text-destructive" />}
+          </div>
         </div>
         <div className="mt-0.5 space-y-0.5 overflow-hidden">
           {blocked && (
@@ -183,7 +201,18 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
               {blocked.motivo || "Bloqueado"}
             </div>
           )}
-          {!blocked && dayEvts.slice(0, 2).map((e) => (
+          {institucional && (
+            <div
+              className={`truncate rounded px-1 py-0.5 text-[10px] font-medium ${
+                institucional.tipo === "pagamento"
+                  ? "bg-primary/10 text-primary"
+                  : "bg-amber-100 text-amber-700 italic"
+              }`}
+            >
+              {institucional.titulo}
+            </div>
+          )}
+          {!blocked && dayEvts.slice(0, institucional ? 1 : 2).map((e) => (
             <div
               key={e.id}
               className={`truncate rounded px-1 py-0.5 text-[10px] font-medium ${statusColor[e.status] || "bg-muted text-muted-foreground"}`}
@@ -191,15 +220,32 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
               {e.titulo_evento}
             </div>
           ))}
-          {!blocked && dayEvts.length > 2 && (
-            <span className="text-[10px] text-muted-foreground">+{dayEvts.length - 2} mais</span>
+          {!blocked && dayEvts.length > (institucional ? 1 : 2) && (
+            <span className="text-[10px] text-muted-foreground">+{dayEvts.length - (institucional ? 1 : 2)} mais</span>
           )}
         </div>
       </div>
     );
+
+    if (institucional) {
+      cells.push(
+        <Tooltip key={day}>
+          <TooltipTrigger asChild>{cellContent}</TooltipTrigger>
+          <TooltipContent side="top" className="text-xs">
+            <p className="font-medium">{institucional.titulo}</p>
+            <p className="text-muted-foreground">
+              {institucional.tipo === "pagamento" ? "📅 Pagamento do Estado" : "🏛️ Feriado"}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      );
+    } else {
+      cells.push(cellContent);
+    }
   }
 
   const selectedDayBlocked = selectedDay ? getBlockedForDay(selectedDay.getDate()) : undefined;
+  const selectedDayInstitucional = selectedDay ? getInstitucionalForDay(selectedDay.getDate()) : undefined;
 
   return (
     <div className="rounded-xl border border-border bg-card">
@@ -233,6 +279,14 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
           <Lock className="h-2.5 w-2.5 text-destructive" />
           <span className="text-xs text-muted-foreground">Bloqueado</span>
         </div>
+        <div className="flex items-center gap-1">
+          <DollarSign className="h-2.5 w-2.5 text-primary" />
+          <span className="text-xs text-muted-foreground">Pagamento</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Star className="h-2.5 w-2.5 text-amber-500" />
+          <span className="text-xs text-muted-foreground">Feriado</span>
+        </div>
       </div>
 
       {/* Grid */}
@@ -256,6 +310,35 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
             </DialogTitle>
           </DialogHeader>
 
+          {/* Institutional date info */}
+          {selectedDayInstitucional && (
+            <div
+              className={`rounded-lg border p-3 ${
+                selectedDayInstitucional.tipo === "pagamento"
+                  ? "border-primary/30 bg-primary/5"
+                  : "border-amber-300/30 bg-amber-50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {selectedDayInstitucional.tipo === "pagamento" ? (
+                  <DollarSign className="h-4 w-4 text-primary" />
+                ) : (
+                  <Star className="h-4 w-4 text-amber-500" />
+                )}
+                <div>
+                  <p className={`text-sm font-medium ${
+                    selectedDayInstitucional.tipo === "pagamento" ? "text-primary" : "text-amber-700"
+                  }`}>
+                    {selectedDayInstitucional.titulo}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {selectedDayInstitucional.tipo === "pagamento" ? "Calendário de Pagamento do Estado" : "Feriado / Data Comemorativa"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Blocked date info */}
           {selectedDayBlocked && (
             <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3">
@@ -277,7 +360,7 @@ const CalendarioOcupacao = ({ isAdmin = false }: CalendarioOcupacaoProps) => {
           )}
 
           {/* Events */}
-          {dayEvents.length === 0 && !selectedDayBlocked ? (
+          {dayEvents.length === 0 && !selectedDayBlocked && !selectedDayInstitucional ? (
             <p className="py-4 text-center text-sm text-muted-foreground">Nenhum evento neste dia.</p>
           ) : (
             <div className="space-y-3">
