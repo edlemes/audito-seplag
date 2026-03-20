@@ -366,7 +366,7 @@ const GestaoConteudo = () => {
                 tipo: "galeria", titulo: galeriaTitulo || null, subtitulo: galeriaSubtitulo || null,
                 imagem_url: galeriaUrl.trim(), ordem: galeriaItems.length,
               });
-              if (error) toast.error("Erro ao salvar");
+              if (error) { console.error("Galeria insert error:", error); toast.error("Erro ao salvar: " + error.message); }
               else { toast.success("Foto adicionada!"); setGaleriaTitulo(""); setGaleriaSubtitulo(""); setGaleriaUrl(""); loadContent(); }
               setUploading(false);
             }} className="rounded-lg border border-dashed border-border p-4">
