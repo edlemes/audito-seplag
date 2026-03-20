@@ -1,16 +1,20 @@
 import { useState } from "react";
-import { Star, Send, MessageSquareHeart, Headphones, Thermometer, TrendingUp, CheckCircle2, ChevronRight, ChevronLeft } from "lucide-react";
+import { Send, Sofa, Wifi, HeadphonesIcon, TrendingUp, CheckCircle2, ChevronRight, ChevronLeft, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import type { AvaliacaoFeedback } from "@/types/agendamento";
+import { RECURSOS_AUDITORIO } from "@/types/agendamento";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import StarRating from "./feedback/StarRating";
+import NpsScale from "./feedback/NpsScale";
 
 const initialData: AvaliacaoFeedback = {
   notaGeral: 0,
@@ -26,67 +30,16 @@ const initialData: AvaliacaoFeedback = {
   comentario: "",
   sugestao: "",
   sugestaoRecurso: "",
+  recursosUtilizados: [],
+  falhaTecnica: false,
+  descricaoFalha: "",
 };
-
-const StarRating = ({ value, onChange, size = "md" }: { value: number; onChange: (v: number) => void; size?: "sm" | "md" }) => {
-  const [hover, setHover] = useState(0);
-  const dim = size === "sm" ? "h-5 w-5" : "h-7 w-7";
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <button
-          key={star}
-          type="button"
-          onClick={() => onChange(star)}
-          onMouseEnter={() => setHover(star)}
-          onMouseLeave={() => setHover(0)}
-          className="rounded-sm p-0.5 transition-transform hover:scale-110 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          <Star
-            className={`${dim} transition-colors duration-150 ${
-              star <= (hover || value) ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"
-            }`}
-          />
-        </button>
-      ))}
-    </div>
-  );
-};
-
-const NpsScale = ({ value, onChange }: { value: number; onChange: (v: number) => void }) => (
-  <div className="space-y-2">
-    <div className="flex justify-between text-xs text-muted-foreground">
-      <span>Nada provável</span>
-      <span>Extremamente provável</span>
-    </div>
-    <div className="flex gap-1">
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-        <button
-          key={n}
-          type="button"
-          onClick={() => onChange(n)}
-          className={`flex-1 rounded-md py-2 text-xs font-medium transition-all active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-            value === n
-              ? n <= 6
-                ? "bg-red-500 text-white shadow-md"
-                : n <= 8
-                ? "bg-amber-400 text-white shadow-md"
-                : "bg-emerald-500 text-white shadow-md"
-              : "bg-muted hover:bg-muted-foreground/10"
-          }`}
-        >
-          {n}
-        </button>
-      ))}
-    </div>
-  </div>
-);
 
 const sections = [
-  { id: 0, title: "Experiência Logística", icon: TrendingUp },
-  { id: 1, title: "Recursos Técnicos", icon: Headphones },
-  { id: 2, title: "Ambiente e Conforto", icon: Thermometer },
-  { id: 3, title: "Impacto e Recomendação", icon: MessageSquareHeart },
+  { id: 0, title: "Infraestrutura", icon: Sofa, desc: "Avalie poltronas, climatização e limpeza do ambiente." },
+  { id: 1, title: "Recursos Técnicos", icon: Wifi, desc: "Avalie sonorização, projeção e conectividade." },
+  { id: 2, title: "Apoio e Logística", icon: HeadphonesIcon, desc: "Avalie o agendamento e o suporte da equipe." },
+  { id: 3, title: "Impacto e Recomendação", icon: TrendingUp, desc: "Compartilhe sua impressão geral." },
 ];
 
 const FeedbackForm = () => {
@@ -101,11 +54,20 @@ const FeedbackForm = () => {
   const set = (field: keyof AvaliacaoFeedback, value: any) =>
     setData((prev) => ({ ...prev, [field]: value }));
 
+  const toggleRecurso = (recurso: string) => {
+    setData((prev) => ({
+      ...prev,
+      recursosUtilizados: prev.recursosUtilizados.includes(recurso)
+        ? prev.recursosUtilizados.filter((r) => r !== recurso)
+        : [...prev.recursosUtilizados, recurso],
+    }));
+  };
+
   const canAdvance = () => {
-    if (step === 0) return data.notaGeral > 0 && data.notaLogistica > 0;
+    if (step === 0) return data.notaConforto > 0 && data.notaTemperatura > 0;
     if (step === 1) return data.notaTecnologia > 0 && data.notaEquipamentos > 0;
-    if (step === 2) return data.notaConforto > 0 && data.notaTemperatura > 0;
-    return data.npsScore > 0;
+    if (step === 2) return data.notaLogistica > 0 && data.notaAtendimento > 0;
+    return data.notaGeral > 0 && data.npsScore > 0;
   };
 
   const handleSubmit = async () => {
@@ -129,6 +91,9 @@ const FeedbackForm = () => {
       comentario: data.comentario || null,
       sugestao: data.sugestao || null,
       sugestao_recurso: data.sugestaoRecurso || null,
+      recursos_utilizados: data.recursosUtilizados,
+      falha_tecnica: data.falhaTecnica,
+      descricao_falha: data.descricaoFalha || null,
     });
     setLoading(false);
 
@@ -143,7 +108,7 @@ const FeedbackForm = () => {
   if (submitted) {
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="mx-auto flex max-w-lg flex-col items-center gap-6 py-16 text-center"
       >
@@ -151,14 +116,14 @@ const FeedbackForm = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-          className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100"
+          className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50"
         >
           <CheckCircle2 className="h-10 w-10 text-emerald-600" />
         </motion.div>
         <h2 className="text-2xl font-bold text-foreground">Avaliação enviada com sucesso!</h2>
         <p className="text-muted-foreground">
-          Agradecemos imensamente pelo seu feedback. Sua opinião é fundamental para aprimorarmos
-          continuamente os serviços do Auditório Antônio Mendes.
+          Agradecemos pelo seu feedback. Sua opinião é fundamental para aprimorarmos
+          o Auditório Antônio Mendes.
         </p>
         <Button
           variant="outline"
@@ -182,12 +147,12 @@ const FeedbackForm = () => {
   );
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="space-y-6">
       {/* Progress */}
       <div className="space-y-3">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span>Etapa {step + 1} de {sections.length}</span>
-          <span>{sections[step].title}</span>
+          <span>{Math.round(progress)}% concluído</span>
         </div>
         <Progress value={progress} className="h-2" />
         <div className="flex gap-1">
@@ -225,35 +190,107 @@ const FeedbackForm = () => {
                 {(() => {
                   const Icon = sections[step].icon;
                   return (
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
                   );
                 })()}
                 <div>
                   <h3 className="font-semibold text-foreground">{sections[step].title}</h3>
-                  <p className="text-xs text-muted-foreground">
-                    {step === 0 && "Avalie a facilidade de agendamento e a organização geral."}
-                    {step === 1 && "Avalie a qualidade dos recursos tecnológicos disponíveis."}
-                    {step === 2 && "Avalie o conforto e as condições do ambiente."}
-                    {step === 3 && "Compartilhe sua impressão geral e recomendação."}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{sections[step].desc}</p>
                 </div>
               </div>
 
+              {/* Step 0: Infraestrutura e Limpeza */}
               {step === 0 && (
                 <div className="space-y-5">
-                  <RatingRow label="Experiência Geral" field="notaGeral" />
-                  <RatingRow label="Facilidade de Agendamento" field="notaLogistica" />
-                  <RatingRow label="Atendimento da Equipe" field="notaAtendimento" />
+                  <RatingRow label="Climatização e Conforto" field="notaConforto" />
+                  <RatingRow label="Temperatura do Ambiente" field="notaTemperatura" />
+                  <RatingRow label="Infraestrutura Geral" field="notaInfraestrutura" />
+                  <div className="space-y-2">
+                    <Label htmlFor="comentario">Observações sobre o ambiente</Label>
+                    <Textarea
+                      id="comentario"
+                      rows={2}
+                      placeholder="Poltronas, limpeza, acessibilidade..."
+                      value={data.comentario}
+                      onChange={(e) => set("comentario", e.target.value)}
+                    />
+                  </div>
                 </div>
               )}
 
+              {/* Step 1: Recursos Técnicos */}
               {step === 1 && (
                 <div className="space-y-5">
-                  <RatingRow label="Projeção e Sonorização" field="notaTecnologia" />
+                  <RatingRow label="Sonorização e Projeção" field="notaTecnologia" />
                   <RatingRow label="Equipamentos em Geral" field="notaEquipamentos" />
-                  <RatingRow label="Infraestrutura (Rede/Wi-Fi)" field="notaInfraestrutura" />
+
+                  <div className="space-y-3 pt-2">
+                    <Label className="text-sm font-medium">Recursos utilizados no evento</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {RECURSOS_AUDITORIO.map((recurso) => (
+                        <label
+                          key={recurso}
+                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-border/60 p-2.5 transition-colors hover:bg-muted/50 has-[data-state=checked]:border-primary/40 has-[data-state=checked]:bg-primary/5"
+                        >
+                          <Checkbox
+                            checked={data.recursosUtilizados.includes(recurso)}
+                            onCheckedChange={() => toggleRecurso(recurso)}
+                          />
+                          <span className="text-xs">{recurso}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 rounded-lg border border-amber-200/60 bg-amber-50/50 p-4">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-600" />
+                      <Label className="text-sm font-medium text-amber-800">
+                        Houve alguma falha técnica durante o evento?
+                      </Label>
+                    </div>
+                    <RadioGroup
+                      value={data.falhaTecnica ? "sim" : "nao"}
+                      onValueChange={(v) => {
+                        set("falhaTecnica", v === "sim");
+                        if (v === "nao") set("descricaoFalha", "");
+                      }}
+                      className="flex gap-6"
+                    >
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem value="sim" id="falha-sim" />
+                        <Label htmlFor="falha-sim" className="cursor-pointer text-sm">Sim</Label>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem value="nao" id="falha-nao" />
+                        <Label htmlFor="falha-nao" className="cursor-pointer text-sm">Não</Label>
+                      </div>
+                    </RadioGroup>
+                    {data.falhaTecnica && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="overflow-hidden"
+                      >
+                        <Textarea
+                          rows={2}
+                          placeholder="Descreva brevemente o que aconteceu..."
+                          value={data.descricaoFalha}
+                          onChange={(e) => set("descricaoFalha", e.target.value)}
+                        />
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Apoio e Logística */}
+              {step === 2 && (
+                <div className="space-y-5">
+                  <RatingRow label="Facilidade de Agendamento" field="notaLogistica" />
+                  <RatingRow label="Atendimento da Equipe" field="notaAtendimento" />
                   <div className="space-y-2 pt-2">
                     <Label className="text-sm font-medium">
                       O suporte técnico foi solicitado durante o evento?
@@ -276,33 +313,20 @@ const FeedbackForm = () => {
                 </div>
               )}
 
-              {step === 2 && (
-                <div className="space-y-5">
-                  <RatingRow label="Climatização e Conforto" field="notaConforto" />
-                  <RatingRow label="Temperatura do Auditório" field="notaTemperatura" />
-                  <div className="space-y-2">
-                    <Label htmlFor="comentario">Comentários sobre a experiência</Label>
-                    <Textarea
-                      id="comentario"
-                      rows={3}
-                      placeholder="Conte-nos como foi sua experiência..."
-                      value={data.comentario}
-                      onChange={(e) => set("comentario", e.target.value)}
-                    />
-                  </div>
-                </div>
-              )}
-
+              {/* Step 3: Impacto e Recomendação */}
               {step === 3 && (
                 <div className="space-y-6">
+                  <RatingRow label="Satisfação Geral" field="notaGeral" />
+
                   <div className="space-y-3">
                     <Label className="text-sm font-medium">
                       De 0 a 10, qual a probabilidade de recomendar o auditório? (NPS)
                     </Label>
                     <NpsScale value={data.npsScore} onChange={(v) => set("npsScore", v)} />
                   </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="sugestao">Sugestões de melhoria</Label>
+                    <Label htmlFor="sugestao">Sugestões de melhoria e elogios</Label>
                     <Textarea
                       id="sugestao"
                       rows={2}
@@ -313,7 +337,7 @@ const FeedbackForm = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="sugestaoRecurso">
-                      Existe algum recurso tecnológico ou melhoria física essencial para futuros eventos?
+                      Algum recurso tecnológico ou melhoria física essencial para futuros eventos?
                     </Label>
                     <Textarea
                       id="sugestaoRecurso"
@@ -345,7 +369,11 @@ const FeedbackForm = () => {
         {step < sections.length - 1 ? (
           <Button
             type="button"
-            onClick={() => canAdvance() ? setStep((s) => s + 1) : toast.error("Preencha os campos obrigatórios.")}
+            onClick={() =>
+              canAdvance()
+                ? setStep((s) => s + 1)
+                : toast.error("Preencha os campos obrigatórios.")
+            }
             className="gap-1"
           >
             Próximo
