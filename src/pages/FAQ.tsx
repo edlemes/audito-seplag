@@ -32,7 +32,7 @@ const faqItems = [
   {
     question: "É possível agendar nos finais de semana ou feriados?",
     answer:
-      "O auditório funciona em dias úteis. Datas de feriados nacionais e estaduais (Mato Grosso) são bloqueadas automaticamente no calendário. Casos excepcionais podem ser avaliados pela administração.",
+      "O Auditório Antônio Mendes funciona em dias úteis. Datas de feriados nacionais e estaduais (Mato Grosso) são bloqueadas automaticamente no calendário. Casos excepcionais podem ser avaliados pela administração.",
   },
   {
     question: "Como acompanho o status da minha solicitação?",
