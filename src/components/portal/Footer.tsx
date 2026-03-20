@@ -20,6 +20,17 @@ const Footer = () => {
 
   return (
     <footer className="mt-auto border-t border-primary-light/20 bg-[hsl(212,100%,16%)]">
+      {/* Mapa Google Maps */}
+      <div className="group relative h-64 w-full overflow-hidden">
+        <iframe
+          title="Localização SEPLAG-MT"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3843.1234!2d-56.0968!3d-15.5989!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x939db1b5a0b0b0b1%3A0x1234567890abcdef!2sSEPLAG-MT!5e0!3m2!1spt-BR!2sbr!4v1700000000000"
+          className="h-full w-full border-0 grayscale transition-all duration-500 group-hover:grayscale-0"
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
       <div className="container mx-auto flex flex-col items-center gap-4 px-6 py-5 md:flex-row md:justify-between">
         {/* Left — logo + identity */}
         <div className="flex items-center gap-4">
