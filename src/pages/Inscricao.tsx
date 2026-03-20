@@ -47,7 +47,7 @@ const maskPhone = (v: string) => {
 const eventInfo = [
   { icon: CalendarDays, label: "Data", value: "A definir", color: "text-primary" },
   { icon: Clock, label: "Horário", value: "08h – 17h", color: "text-primary" },
-  { icon: MapPin, label: "Local", value: "Auditório SEPLAG – CPA, Cuiabá", color: "text-primary" },
+  { icon: MapPin, label: "Local", value: "Auditório Antônio Mendes – CPA, Cuiabá", color: "text-primary" },
   { icon: Users, label: "Vagas", value: "200 participantes", color: "text-primary" },
 ];
 
