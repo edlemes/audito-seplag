@@ -116,7 +116,7 @@ const Agendamento = () => {
       <main id="main-content" className="flex-1 py-10">
         <div className="container mx-auto max-w-3xl px-4">
           <h1 className="mb-2 text-2xl font-bold text-foreground">Solicitar Agendamento</h1>
-          <p className="mb-8 text-muted-foreground">Preencha as etapas abaixo para solicitar o uso do auditório.</p>
+          <p className="mb-8 text-muted-foreground">Preencha as etapas abaixo para solicitar o uso do Auditório Antônio Mendes.</p>
 
           {/* Stepper */}
           <div className="mb-8 flex items-center justify-center gap-2" role="navigation" aria-label="Etapas do formulário">

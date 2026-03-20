@@ -233,9 +233,11 @@ const Inscricao = () => {
           <div className="container mx-auto max-w-3xl px-4 text-center">
             <h2 className="mb-4 text-2xl font-bold text-foreground">Sobre o Evento</h2>
             <p className="text-muted-foreground leading-relaxed">
-              O Encontro Estratégico do Auditório SEPLAG reúne servidores, gestores e especialistas
+              O Encontro Estratégico do Auditório Antônio Mendes reúne servidores, gestores e especialistas
               para debater soluções de inovação na administração pública. Com palestras, painéis e
               workshops, o evento promove a troca de experiências e o desenvolvimento de competências
+              essenciais para a modernização do serviço público em Mato Grosso.
+            </p>
               essenciais para a modernização do serviço público em Mato Grosso.
             </p>
           </div>

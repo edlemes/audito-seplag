@@ -30,8 +30,8 @@ const Login = () => {
           <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
             <Building2 className="h-7 w-7 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Portal do Auditório</h1>
-          <p className="text-sm text-muted-foreground">Acesso Administrativo</p>
+          <h1 className="text-2xl font-bold text-foreground">Auditório Antônio Mendes</h1>
+          <p className="text-sm text-muted-foreground">Acesso Administrativo — SEPLAG</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

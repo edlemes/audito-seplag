@@ -125,7 +125,7 @@ const Vistoria = () => {
     doc.text("TERMO DE VISTORIA", 105, 25, { align: "center" });
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text("Portal do Auditório — SEPLAG / MT", 105, 33, { align: "center" });
+    doc.text("Auditório Antônio Mendes — SEPLAG / MT", 105, 33, { align: "center" });
 
     doc.setDrawColor(0, 69, 135);
     doc.setLineWidth(0.5);

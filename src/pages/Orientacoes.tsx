@@ -48,7 +48,7 @@ const Orientacoes = () => (
             Termo de Responsabilidade
           </h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            Para utilizar o auditório, é obrigatória a assinatura do Termo de Responsabilidade via SigDoc. Baixe o modelo, assine digitalmente e envie na etapa de agendamento.
+            Para utilizar o Auditório Antônio Mendes, é obrigatória a assinatura do Termo de Responsabilidade via SigDoc. Baixe o modelo, assine digitalmente e envie na etapa de agendamento.
           </p>
           <Button variant="outline" className="gap-2" onClick={() => alert("Download do Termo de Responsabilidade")}>
             <Download className="h-4 w-4" />

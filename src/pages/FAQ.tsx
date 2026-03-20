@@ -71,8 +71,8 @@ const FAQ = () => (
           <h1 className="mb-2 text-center text-3xl font-bold text-foreground">
             Dúvidas Frequentes
           </h1>
-          <p className="mb-10 text-center text-muted-foreground">
-            Encontre respostas rápidas sobre o uso do auditório da SEPLAG
+           <p className="mb-10 text-center text-muted-foreground">
+             Encontre respostas rápidas sobre o uso do Auditório Antônio Mendes
           </p>
 
           <Accordion type="single" collapsible className="space-y-2">

@@ -58,7 +58,7 @@ const Index = () => (
       >
         <div className="container mx-auto flex flex-col items-center gap-4 px-4 text-center">
           <h2 className="text-2xl font-bold text-primary-foreground">
-            Precisa do auditório para seu evento?
+            Precisa do Auditório Antônio Mendes para seu evento?
           </h2>
           <p className="text-primary-foreground/70">
             Solicite agora e receba a confirmação em até 48 horas úteis.
