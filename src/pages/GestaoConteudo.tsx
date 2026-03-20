@@ -37,6 +37,7 @@ const GestaoConteudo = () => {
   const [carouselItems, setCarouselItems] = useState<CmsItem[]>([]);
   const [galeriaItems, setGaleriaItems] = useState<CmsItem[]>([]);
   const [logoItem, setLogoItem] = useState<CmsItem | null>(null);
+  const [logoSize, setLogoSize] = useState(40);
   const [splashNomeItem, setSplashNomeItem] = useState<CmsItem | null>(null);
   const [uploading, setUploading] = useState(false);
   const [newUrl, setNewUrl] = useState("");
