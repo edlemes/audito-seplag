@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Phone, MapPin } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
+import { Phone, MapPin, SunMoon, AArrowUp, AArrowDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const Footer = () => {
