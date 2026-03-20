@@ -110,6 +110,36 @@ export type Database = {
         }
         Relationships: []
       }
+      inscricoes_evento: {
+        Row: {
+          cargo: string | null
+          created_at: string
+          email: string
+          id: string
+          nome: string
+          orgao: string
+          telefone: string | null
+        }
+        Insert: {
+          cargo?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          nome: string
+          orgao: string
+          telefone?: string | null
+        }
+        Update: {
+          cargo?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          nome?: string
+          orgao?: string
+          telefone?: string | null
+        }
+        Relationships: []
+      }
       noticias: {
         Row: {
           ativo: boolean
