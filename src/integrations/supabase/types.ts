@@ -80,10 +80,17 @@ export type Database = {
           created_at: string
           id: string
           nota_atendimento: number | null
+          nota_conforto: number | null
           nota_equipamentos: number | null
           nota_geral: number
           nota_infraestrutura: number | null
+          nota_logistica: number | null
+          nota_tecnologia: number | null
+          nota_temperatura: number | null
+          nps_score: number | null
           sugestao: string | null
+          sugestao_recurso: string | null
+          suporte_tecnico: boolean | null
           user_id: string | null
         }
         Insert: {
@@ -91,10 +98,17 @@ export type Database = {
           created_at?: string
           id?: string
           nota_atendimento?: number | null
+          nota_conforto?: number | null
           nota_equipamentos?: number | null
           nota_geral: number
           nota_infraestrutura?: number | null
+          nota_logistica?: number | null
+          nota_tecnologia?: number | null
+          nota_temperatura?: number | null
+          nps_score?: number | null
           sugestao?: string | null
+          sugestao_recurso?: string | null
+          suporte_tecnico?: boolean | null
           user_id?: string | null
         }
         Update: {
@@ -102,10 +116,17 @@ export type Database = {
           created_at?: string
           id?: string
           nota_atendimento?: number | null
+          nota_conforto?: number | null
           nota_equipamentos?: number | null
           nota_geral?: number
           nota_infraestrutura?: number | null
+          nota_logistica?: number | null
+          nota_tecnologia?: number | null
+          nota_temperatura?: number | null
+          nps_score?: number | null
           sugestao?: string | null
+          sugestao_recurso?: string | null
+          suporte_tecnico?: boolean | null
           user_id?: string | null
         }
         Relationships: []

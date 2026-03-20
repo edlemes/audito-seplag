@@ -31,8 +31,15 @@ export interface AvaliacaoFeedback {
   notaInfraestrutura: number;
   notaAtendimento: number;
   notaEquipamentos: number;
+  notaLogistica: number;
+  notaTecnologia: number;
+  notaConforto: number;
+  suporteTecnico: boolean | null;
+  notaTemperatura: number;
+  npsScore: number;
   comentario: string;
   sugestao: string;
+  sugestaoRecurso: string;
 }
 
 export const SECRETARIAS_MT = [
