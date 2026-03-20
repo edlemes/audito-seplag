@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, ArrowLeft, Pencil, Save, Link2, Newspaper, Type } from "lucide-react";
+import { Trash2, Plus, ArrowUp, ArrowDown, Image as ImageIcon, ArrowLeft, Pencil, Save, Link2, Newspaper, Type, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 
