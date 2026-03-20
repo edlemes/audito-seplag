@@ -47,6 +47,11 @@ const GestaoConteudo = () => {
   const [editUrl, setEditUrl] = useState("");
   const [splashNome, setSplashNome] = useState("AUDITÓRIO SEPLAG ANTÔNIO MENDES");
 
+  // Gallery state
+  const [galeriaUrl, setGaleriaUrl] = useState("");
+  const [galeriaTitulo, setGaleriaTitulo] = useState("");
+  const [galeriaSubtitulo, setGaleriaSubtitulo] = useState("");
+
   // News state
   const [noticias, setNoticias] = useState<Noticia[]>([]);
   const [noticiaUrl, setNoticiaUrl] = useState("");
