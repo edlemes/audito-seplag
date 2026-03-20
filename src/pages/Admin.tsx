@@ -28,26 +28,30 @@ const Admin = () => {
   }, [isAdmin, isReadonly]);
 
   const loadData = async () => {
-    // Solicitations
-    const { data: sols } = await supabase.from("solicitacoes_auditorio").select("*").order("created_at", { ascending: false });
-    setSolicitacoes(sols || []);
-    
-    const total = sols?.length || 0;
-    const pendentes = sols?.filter((s) => s.status === "pendente").length || 0;
-    const aprovadas = sols?.filter((s) => s.status === "aprovada").length || 0;
+    // Run queries in parallel
+    const [solsRes, countRes, fbsRes] = await Promise.all([
+      supabase.from("solicitacoes_auditorio").select("*").order("created_at", { ascending: false }).limit(200),
+      supabase.from("feedback_usuario").select("*", { count: "exact", head: true }),
+      supabase.from("feedback_usuario").select("nota_geral, nota_infraestrutura, nota_atendimento, nota_equipamentos"),
+    ]);
 
-    // Feedbacks
-    const { count } = await supabase.from("feedback_usuario").select("*", { count: "exact", head: true });
+    const sols = solsRes.data || [];
+    setSolicitacoes(sols);
 
-    setStats({ total, pendentes, aprovadas, feedbacks: count || 0 });
+    const total = sols.length;
+    const pendentes = sols.filter((s) => s.status === "pendente").length;
+    const aprovadas = sols.filter((s) => s.status === "aprovada").length;
+    setStats({ total, pendentes, aprovadas, feedbacks: countRes.count || 0 });
 
     // Pie: solicitations by secretary
     const secMap: Record<string, number> = {};
-    sols?.forEach((s) => { secMap[s.secretaria_atendida] = (secMap[s.secretaria_atendida] || 0) + 1; });
+    for (const s of sols) {
+      secMap[s.secretaria_atendida] = (secMap[s.secretaria_atendida] || 0) + 1;
+    }
     setPieData(Object.entries(secMap).map(([name, value]) => ({ name: name.replace(/.*\(/, "").replace(")", "") || name, value })));
 
     // Bar: avg ratings
-    const { data: fbs } = await supabase.from("feedback_usuario").select("*");
+    const fbs = fbsRes.data;
     if (fbs && fbs.length > 0) {
       const avg = (key: string) => {
         const vals = fbs.map((f: any) => f[key]).filter(Boolean) as number[];
