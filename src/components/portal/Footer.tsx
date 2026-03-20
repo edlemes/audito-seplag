@@ -24,7 +24,7 @@ const Footer = () => {
       <div className="group relative h-64 w-full overflow-hidden">
         <iframe
           title="Localização SEPLAG-MT"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3842.856!2d-56.0972!3d-15.6014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x939db19db3992279%3A0x648b908413e5c2f0!2sSecretaria%20de%20Estado%20de%20Planejamento%20e%20Gest%C3%A3o%20-%20SEPLAG!5e0!3m2!1spt-BR!2sbr!4v1700000000000"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3843.4685571388063!2d-56.07931090321045!3d-15.566594899999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x939db103442be443%3A0x41835cd9e6d299d7!2sSecretaria%20de%20Estado%20de%20Planejamento%20e%20Gest%C3%A3o%20-%20SEPLAG-MT!5e0!3m2!1spt-BR!2sbr!4v1774029615677!5m2!1spt-BR!2sbr"
           className="h-full w-full border-0 grayscale transition-all duration-500 group-hover:grayscale-0"
           allowFullScreen
           loading="lazy"
