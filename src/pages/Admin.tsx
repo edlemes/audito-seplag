@@ -19,10 +19,13 @@ const statusLabels: Record<string, string> = { pendente: "Pendente", aprovada: "
 const Admin = () => {
   const { user, isAdmin, isReadonly, signOut } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState({ total: 0, pendentes: 0, aprovadas: 0, feedbacks: 0 });
+  const [stats, setStats] = useState({ total: 0, pendentes: 0, aprovadas: 0, feedbacks: 0, inscritos: 0 });
   const [pieData, setPieData] = useState<{ name: string; value: number }[]>([]);
   const [barData, setBarData] = useState<{ name: string; media: number }[]>([]);
   const [solicitacoes, setSolicitacoes] = useState<any[]>([]);
+  const [inscricoes, setInscricoes] = useState<any[]>([]);
+  const [searchInscricao, setSearchInscricao] = useState("");
+  const [filterOrgao, setFilterOrgao] = useState("");
 
   useEffect(() => {
     if (!isAdmin && !isReadonly) return;
