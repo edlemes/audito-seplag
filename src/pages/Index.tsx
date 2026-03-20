@@ -5,20 +5,13 @@ import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
-import { CalendarPlus, Mic2, Monitor, Users, Shield } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const reveal = {
   hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
   visible: { opacity: 1, y: 0, filter: "blur(0px)" },
 };
-
-const features = [
-  { icon: Monitor, title: "Projeção HD", desc: "Tela de projeção e equipamentos audiovisuais modernos" },
-  { icon: Mic2, title: "Sonorização", desc: "Sistema de som profissional com microfones sem fio" },
-  { icon: Users, title: "Capacidade", desc: "Espaço para até 200 participantes confortavelmente" },
-  { icon: Shield, title: "Segurança", desc: "Controle de acesso e equipe de apoio dedicada" },
-];
 
 const Index = () => (
   <div className="flex min-h-screen flex-col">
