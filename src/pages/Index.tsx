@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
 import HeroCarousel from "@/components/portal/HeroCarousel";
-import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import GaleriaEventos from "@/components/portal/GaleriaEventos";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { CalendarPlus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 const reveal = {
   hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
