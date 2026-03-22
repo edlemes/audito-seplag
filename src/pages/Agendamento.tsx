@@ -32,6 +32,7 @@ const Agendamento = () => {
   const [termoAssinado, setTermoAssinado] = useState<File | null>(null);
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
