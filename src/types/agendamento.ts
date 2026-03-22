@@ -137,7 +137,7 @@ export const ORGAOS_POR_CATEGORIA = [
     ],
   },
   {
-    categoria: 'PODER JUDICIÁRIO E FUNÇÕES ESSENCIAIS',
+    categoria: 'PODER JUDICIÁRIO E FUNÇÕES ESSENCIAIS À JUSTIÇA',
     orgaos: [
       'TJMT / Tribunal de Justiça do Estado de Mato Grosso',
       'MP-MT / Ministério Público do Estado de Mato Grosso',
