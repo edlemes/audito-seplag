@@ -145,7 +145,7 @@ export const ORGAOS_POR_CATEGORIA = [
     ],
   },
   {
-    categoria: 'Outros',
+    categoria: 'OUTROS',
     orgaos: ['OUTROS / Especificar outra instituição'],
   },
 ] as const;
