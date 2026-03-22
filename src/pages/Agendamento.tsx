@@ -48,7 +48,7 @@ const Agendamento = () => {
       ? `OUTROS / ${solicitante.orgaoOutro.trim()}`
       : solicitante.orgao;
 
-    const { error } = await supabase.from("solicitacoes_auditorio").insert({
+    const { data, error } = await supabase.from("solicitacoes_auditorio").insert({
       user_id: user?.id || null,
       nome_solicitante: solicitante.nome,
       cpf: solicitante.cpf,
@@ -62,13 +62,15 @@ const Agendamento = () => {
       horario_fim: evento.horarioFim,
       num_participantes: evento.numParticipantes,
       secretaria_atendida: evento.secretariaAtendida,
-    });
+    }).select("id").single();
 
     if (error) {
       console.error('[Agendamento] Submission failed:', error?.code ?? 'unknown');
       toast.error("Erro ao enviar solicitação. Faça login primeiro.");
       return;
     }
+    const idCurto = data.id.split("-")[0].toUpperCase();
+    setProtocolo(`AUD-${idCurto}`);
     setSubmitted(true);
     toast.success("Solicitação enviada com sucesso!");
   };
