@@ -84,8 +84,11 @@ const Agendamento = () => {
             <CheckCircle2 className="h-12 w-12 text-success" />
           </div>
           <h2 className="text-2xl font-bold text-foreground">Solicitação Enviada!</h2>
+          <p className="rounded-lg bg-muted px-4 py-2 font-mono text-lg font-semibold text-primary">
+            Protocolo: {protocolo}
+          </p>
           <p className="max-w-md text-muted-foreground">
-            Sua solicitação de agendamento foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
+            Sua solicitação foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
           </p>
 
           {/* Resumo visual */}
