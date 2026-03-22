@@ -18,6 +18,7 @@ const Agendamento = () => {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [protocolo, setProtocolo] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [solicitante, setSolicitante] = useState<DadosSolicitante>({
     nome: "", cpf: "", email: "", telefone: "", orgao: "", orgaoOutro: "",
@@ -33,46 +34,106 @@ const Agendamento = () => {
   const { user } = useAuth();
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+
+    if (!user?.id) {
+      toast.error("Faça login para concluir o agendamento.");
+      return;
+    }
+
     if (!solicitante.nome || !solicitante.cpf || !solicitante.email) {
       toast.error("Preencha todos os dados do solicitante.");
       setStep(0);
       return;
     }
-    if (!evento.titulo || !evento.data || !evento.secretariaAtendida) {
+
+    if (!evento.titulo || !evento.data || !evento.dataTermino || !evento.horarioInicio || !evento.horarioFim || !evento.secretariaAtendida) {
       toast.error("Preencha todos os dados do evento.");
       setStep(1);
       return;
     }
 
-    const orgaoFinal = solicitante.orgao.startsWith("OUTROS") && solicitante.orgaoOutro.trim()
-      ? `OUTROS / ${solicitante.orgaoOutro.trim()}`
-      : solicitante.orgao;
-
-    const { data, error } = await supabase.from("solicitacoes_auditorio").insert({
-      user_id: user?.id || null,
-      nome_solicitante: solicitante.nome,
-      cpf: solicitante.cpf,
-      email: solicitante.email,
-      telefone: solicitante.telefone,
-      orgao: orgaoFinal,
-      titulo_evento: evento.titulo,
-      descricao_evento: evento.descricao,
-      data_evento: evento.data,
-      horario_inicio: evento.horarioInicio,
-      horario_fim: evento.horarioFim,
-      num_participantes: evento.numParticipantes,
-      secretaria_atendida: evento.secretariaAtendida,
-    }).select("id").single();
-
-    if (error) {
-      console.error('[Agendamento] Submission failed:', error?.code ?? 'unknown');
-      toast.error("Erro ao enviar solicitação. Faça login primeiro.");
+    if (evento.dataTermino < evento.data) {
+      toast.error("A data de término não pode ser anterior à data de início.");
+      setStep(1);
       return;
     }
-    const idCurto = data.id.split("-")[0].toUpperCase();
-    setProtocolo(`AUD-${idCurto}`);
-    setSubmitted(true);
-    toast.success("Solicitação enviada com sucesso!");
+
+    if (evento.data === evento.dataTermino && evento.horarioFim <= evento.horarioInicio) {
+      toast.error("O horário de término deve ser maior que o horário de início.");
+      setStep(1);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const orgaoFinal = solicitante.orgao.startsWith("OUTROS") && solicitante.orgaoOutro.trim()
+        ? `OUTROS / ${solicitante.orgaoOutro.trim()}`
+        : solicitante.orgao;
+
+      const descricaoEvento = evento.dataTermino !== evento.data
+        ? `${evento.descricao}\n\nPeríodo do evento: ${evento.data} a ${evento.dataTermino}`.trim()
+        : evento.descricao;
+
+      const { data: inserted, error } = await supabase
+        .from("solicitacoes_auditorio")
+        .insert({
+          user_id: user.id,
+          nome_solicitante: solicitante.nome,
+          cpf: solicitante.cpf,
+          email: solicitante.email,
+          telefone: solicitante.telefone,
+          orgao: orgaoFinal,
+          titulo_evento: evento.titulo,
+          descricao_evento: descricaoEvento,
+          data_evento: evento.data,
+          horario_inicio: evento.horarioInicio,
+          horario_fim: evento.horarioFim,
+          num_participantes: evento.numParticipantes,
+          secretaria_atendida: evento.secretariaAtendida,
+        })
+        .select("id")
+        .maybeSingle();
+
+      if (error) {
+        console.error("[Agendamento] Submission failed:", error);
+        toast.error("Erro ao enviar solicitação. Verifique os dados e tente novamente.");
+        return;
+      }
+
+      let protocoloId = inserted?.id ?? null;
+
+      if (!protocoloId) {
+        const { data: fallback, error: fallbackError } = await supabase
+          .from("solicitacoes_auditorio")
+          .select("id")
+          .eq("user_id", user.id)
+          .eq("titulo_evento", evento.titulo)
+          .eq("data_evento", evento.data)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (fallbackError) {
+          console.error("[Agendamento] Fallback protocol lookup failed:", fallbackError);
+        }
+
+        protocoloId = fallback?.id ?? null;
+      }
+
+      if (!protocoloId) {
+        toast.error("Solicitação enviada, mas não foi possível gerar o protocolo.");
+        return;
+      }
+
+      const idCurto = protocoloId.split("-")[0].toUpperCase();
+      setProtocolo(`AUD-${idCurto}`);
+      setSubmitted(true);
+      toast.success("Solicitação enviada com sucesso!");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -91,12 +152,11 @@ const Agendamento = () => {
             Sua solicitação foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
           </p>
 
-          {/* Resumo visual */}
           <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 text-left shadow-sm">
             <h3 className="mb-3 font-semibold text-foreground">Resumo do Pedido</h3>
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between"><dt className="text-muted-foreground">Evento</dt><dd className="font-medium text-foreground">{evento.titulo}</dd></div>
-              <div className="flex justify-between"><dt className="text-muted-foreground">Data</dt><dd className="font-medium text-foreground">{evento.data}</dd></div>
+              <div className="flex justify-between"><dt className="text-muted-foreground">Período</dt><dd className="font-medium text-foreground">{evento.data} até {evento.dataTermino}</dd></div>
               <div className="flex justify-between"><dt className="text-muted-foreground">Horário</dt><dd className="font-medium text-foreground">{evento.horarioInicio} – {evento.horarioFim}</dd></div>
               <div className="flex justify-between"><dt className="text-muted-foreground">Solicitante</dt><dd className="font-medium text-foreground">{solicitante.nome}</dd></div>
               <div className="flex justify-between"><dt className="text-muted-foreground">Órgão</dt><dd className="font-medium text-foreground">{solicitante.orgao}</dd></div>
@@ -128,7 +188,6 @@ const Agendamento = () => {
           <h1 className="mb-2 text-2xl font-bold text-foreground">Solicitar Agendamento</h1>
           <p className="mb-8 text-muted-foreground">Preencha as etapas abaixo para solicitar o uso do Auditório Antônio Mendes.</p>
 
-          {/* Stepper */}
           <div className="mb-8 flex items-center justify-center gap-2" role="navigation" aria-label="Etapas do formulário">
             {steps.map((label, i) => (
               <div key={label} className="flex items-center gap-2">
@@ -153,25 +212,23 @@ const Agendamento = () => {
             ))}
           </div>
 
-          {/* Form content */}
           <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
             {step === 0 && <FormSolicitante data={solicitante} onChange={setSolicitante} />}
             {step === 1 && <FormEvento data={evento} onChange={setEvento} />}
             {step === 2 && <FormDocumentacao file={termoAssinado} onFileChange={setTermoAssinado} solicitante={solicitante} evento={evento} />}
           </div>
 
-          {/* Navigation */}
           <div className="mt-6 flex justify-between">
-            <Button variant="outline" disabled={step === 0} onClick={() => setStep(step - 1)} className="gap-1">
+            <Button variant="outline" disabled={step === 0 || isSubmitting} onClick={() => setStep(step - 1)} className="gap-1">
               <ChevronLeft className="h-4 w-4" /> Anterior
             </Button>
             {step < steps.length - 1 ? (
-              <Button onClick={() => setStep(step + 1)} className="gap-1">
+              <Button onClick={() => setStep(step + 1)} className="gap-1" disabled={isSubmitting}>
                 Próximo <ChevronRight className="h-4 w-4" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="gap-1">
-                <Send className="h-4 w-4" /> Enviar Solicitação
+              <Button onClick={handleSubmit} className="gap-1" disabled={isSubmitting}>
+                <Send className="h-4 w-4" /> {isSubmitting ? "Enviando..." : "Enviar Solicitação"}
               </Button>
             )}
           </div>
