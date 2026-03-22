@@ -19,7 +19,7 @@ const Agendamento = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const [solicitante, setSolicitante] = useState<DadosSolicitante>({
-    nome: "", cpf: "", email: "", telefone: "", orgao: "",
+    nome: "", cpf: "", email: "", telefone: "", orgao: "", orgaoOutro: "",
   });
 
   const [evento, setEvento] = useState<DadosEvento>({
