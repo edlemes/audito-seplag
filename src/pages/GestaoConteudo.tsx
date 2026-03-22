@@ -400,7 +400,34 @@ const GestaoConteudo = () => {
             }} className="rounded-lg border border-dashed border-border p-4">
               <p className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground"><Plus className="h-4 w-4 text-primary" /> Adicionar foto</p>
               <div className="space-y-3">
-                <div><Label className="text-xs">Link da Imagem *</Label><Input value={galeriaUrl} onChange={(e) => setGaleriaUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" /></div>
+                <div>
+                  <Label className="text-xs">Imagem (upload ou link) *</Label>
+                  <div className="mt-1 flex gap-2">
+                    <Input value={galeriaUrl} onChange={(e) => setGaleriaUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" className="flex-1" />
+                    <Label htmlFor="galeria-upload" className="cursor-pointer">
+                      <div className="inline-flex h-9 items-center gap-1.5 rounded-md bg-muted px-3 text-xs font-medium text-foreground transition hover:bg-muted/80">
+                        <ImageIcon className="h-4 w-4" /> Upload
+                      </div>
+                    </Label>
+                    <input
+                      id="galeria-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        const url = await uploadFile(file);
+                        if (url) { setGaleriaUrl(url); toast.success("Imagem enviada!"); }
+                        setUploading(false);
+                        e.target.value = "";
+                      }}
+                      disabled={uploading}
+                    />
+                  </div>
+                  <p className="mt-1 text-[10px] text-muted-foreground">Cole um link ou faça upload de uma imagem do seu computador.</p>
+                </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div><Label className="text-xs">Título</Label><Input value={galeriaTitulo} onChange={(e) => setGaleriaTitulo(e.target.value)} placeholder="Ex: Palestra de Inovação" /></div>
                   <div><Label className="text-xs">Legenda</Label><Input value={galeriaSubtitulo} onChange={(e) => setGaleriaSubtitulo(e.target.value)} placeholder="Ex: Março 2026" /></div>
