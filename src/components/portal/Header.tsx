@@ -165,7 +165,7 @@ const Header = () => {
                 src={logoUrl}
                 alt="Logo SEPLAG Mato Grosso"
                 style={{ height: logoSize, width: logoSize }}
-                className="rounded-lg object-contain bg-primary-dark/80 p-1"
+                className="object-contain"
               />
             ) : (
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10 backdrop-blur-sm">
