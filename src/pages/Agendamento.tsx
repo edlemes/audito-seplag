@@ -24,7 +24,7 @@ const Agendamento = () => {
   });
 
   const [evento, setEvento] = useState<DadosEvento>({
-    titulo: "", descricao: "", data: "", horarioInicio: "", horarioFim: "",
+    titulo: "", descricao: "", data: "", dataTermino: "", horarioInicio: "", horarioFim: "",
     numParticipantes: 0, secretariaAtendida: "",
   });
 

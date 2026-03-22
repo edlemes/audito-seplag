@@ -11,6 +11,7 @@ export interface DadosEvento {
   titulo: string;
   descricao: string;
   data: string;
+  dataTermino: string;
   horarioInicio: string;
   horarioFim: string;
   numParticipantes: number;
