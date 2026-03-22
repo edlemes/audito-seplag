@@ -88,17 +88,24 @@ const FormEvento = ({ data, onChange }: Props) => {
         <Textarea id="descricao" placeholder="Descreva brevemente o evento..." rows={3} value={data.descricao} onChange={(e) => update("descricao", e.target.value)} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="data">Data *</Label>
+          <Label htmlFor="data">Data de Início *</Label>
           <Input id="data" type="date" value={data.data} onChange={(e) => update("data", e.target.value)} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="horarioInicio">Início *</Label>
+          <Label htmlFor="dataTermino">Data de Término *</Label>
+          <Input id="dataTermino" type="date" value={data.dataTermino} onChange={(e) => update("dataTermino", e.target.value)} />
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="horarioInicio">Horário de Início *</Label>
           <Input id="horarioInicio" type="time" value={data.horarioInicio} onChange={(e) => update("horarioInicio", e.target.value)} />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="horarioFim">Término *</Label>
+          <Label htmlFor="horarioFim">Horário de Término *</Label>
           <Input id="horarioFim" type="time" value={data.horarioFim} onChange={(e) => update("horarioFim", e.target.value)} />
         </div>
       </div>
