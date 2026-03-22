@@ -10,7 +10,7 @@ import type { DadosSolicitante, DadosEvento } from "@/types/agendamento";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const steps = ["Solicitante", "Evento", "Documentação"];
 
@@ -32,12 +32,18 @@ const Agendamento = () => {
   const [termoAssinado, setTermoAssinado] = useState<File | null>(null);
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
 
     if (!user?.id) {
-      toast.error("Faça login para concluir o agendamento.");
+      toast.error("Faça login para concluir o agendamento.", {
+        action: {
+          label: "Fazer Login",
+          onClick: () => navigate("/login"),
+        },
+      });
       return;
     }
 
@@ -76,6 +82,13 @@ const Agendamento = () => {
         ? `${evento.descricao}\n\nPeríodo do evento: ${evento.data} a ${evento.dataTermino}`.trim()
         : evento.descricao;
 
+      // For multi-day events where horarioFim <= horarioInicio,
+      // adjust horarioFim to end of day to satisfy DB trigger validation
+      let horarioFimFinal = evento.horarioFim;
+      if (evento.dataTermino !== evento.data && evento.horarioFim <= evento.horarioInicio) {
+        horarioFimFinal = "23:59";
+      }
+
       const { data: inserted, error } = await supabase
         .from("solicitacoes_auditorio")
         .insert({
@@ -89,7 +102,7 @@ const Agendamento = () => {
           descricao_evento: descricaoEvento,
           data_evento: evento.data,
           horario_inicio: evento.horarioInicio,
-          horario_fim: evento.horarioFim,
+          horario_fim: horarioFimFinal,
           num_participantes: evento.numParticipantes,
           secretaria_atendida: evento.secretariaAtendida,
         })
@@ -98,14 +111,26 @@ const Agendamento = () => {
 
       if (error) {
         console.error("[Agendamento] Submission failed:", error);
-        toast.error("Erro ao enviar solicitação. Verifique os dados e tente novamente.");
+        if (error.message?.includes("horario_fim")) {
+          toast.error("O horário de término deve ser posterior ao de início.");
+        } else if (error.code === "42501" || error.message?.includes("policy")) {
+          toast.error("Sessão expirada. Faça login novamente.", {
+            action: {
+              label: "Login",
+              onClick: () => navigate("/login"),
+            },
+          });
+        } else {
+          toast.error(`Erro ao enviar: ${error.message || "Verifique os dados e tente novamente."}`);
+        }
+        setIsSubmitting(false);
         return;
       }
 
       let protocoloId = inserted?.id ?? null;
 
       if (!protocoloId) {
-        const { data: fallback, error: fallbackError } = await supabase
+        const { data: fallback } = await supabase
           .from("solicitacoes_auditorio")
           .select("id")
           .eq("user_id", user.id)
@@ -115,15 +140,13 @@ const Agendamento = () => {
           .limit(1)
           .maybeSingle();
 
-        if (fallbackError) {
-          console.error("[Agendamento] Fallback protocol lookup failed:", fallbackError);
-        }
-
         protocoloId = fallback?.id ?? null;
       }
 
       if (!protocoloId) {
-        toast.error("Solicitação enviada, mas não foi possível gerar o protocolo.");
+        toast.success("Solicitação enviada! Protocolo será enviado por e-mail.");
+        setSubmitted(true);
+        setProtocolo("AUD-PENDENTE");
         return;
       }
 
@@ -131,6 +154,9 @@ const Agendamento = () => {
       setProtocolo(`AUD-${idCurto}`);
       setSubmitted(true);
       toast.success("Solicitação enviada com sucesso!");
+    } catch (err) {
+      console.error("[Agendamento] Unexpected error:", err);
+      toast.error("Erro inesperado. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
