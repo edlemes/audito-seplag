@@ -17,6 +17,7 @@ const steps = ["Solicitante", "Evento", "Documentação"];
 const Agendamento = () => {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [protocolo, setProtocolo] = useState("");
 
   const [solicitante, setSolicitante] = useState<DadosSolicitante>({
     nome: "", cpf: "", email: "", telefone: "", orgao: "", orgaoOutro: "",
