@@ -161,18 +161,23 @@ const Header = () => {
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center gap-3">
             {logoUrl ? (
-              <img src={logoUrl} alt="Logo SEPLAG Mato Grosso" style={{ height: logoSize, width: logoSize }} className="rounded-lg object-contain" />
+              <img
+                src={logoUrl}
+                alt="Logo SEPLAG Mato Grosso"
+                style={{ height: logoSize, width: logoSize }}
+                className="rounded-lg object-contain brightness-0 invert opacity-90"
+              />
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
-                <Building2 className="h-6 w-6 text-secondary-foreground" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-foreground/10 backdrop-blur-sm">
+                <Building2 className="h-6 w-6 text-primary-foreground/90" />
               </div>
             )}
-            <div>
-              <h1 className="text-lg font-bold leading-tight text-primary-foreground">
+            <div className="flex flex-col justify-center">
+              <h1 className="text-base font-bold leading-tight tracking-wide text-primary-foreground md:text-lg">
                 Auditório Antônio Mendes
               </h1>
-              <p className="text-xs font-light text-primary-foreground/70">
-                SEPLAG — Mato Grosso
+              <p className="text-[10px] font-medium leading-snug tracking-wider text-primary-foreground/60 md:text-xs">
+                SEPLAG — Secretaria de Estado de Planejamento e Gestão — MT
               </p>
             </div>
           </Link>
