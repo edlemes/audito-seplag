@@ -1,13 +1,11 @@
 import { motion } from "framer-motion";
 import HeroCarousel from "@/components/portal/HeroCarousel";
-import CalendarioOcupacao from "@/components/portal/CalendarioOcupacao";
 import NoticiasSection from "@/components/portal/NoticiasSection";
 import GaleriaEventos from "@/components/portal/GaleriaEventos";
 import Header from "@/components/portal/Header";
 import Footer from "@/components/portal/Footer";
 import { CalendarPlus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 const reveal = {
   hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
@@ -15,37 +13,11 @@ const reveal = {
 };
 
 const Index = () => {
-  const { user, isAdmin } = useAuth();
-
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main id="main-content">
         <HeroCarousel />
-
-        {/* Calendário — visível apenas para administradores */}
-        {user && isAdmin && (
-          <motion.section
-            className="bg-muted/50 py-16"
-            variants={reveal}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="container mx-auto px-4">
-              <h2 className="mb-2 text-center text-3xl font-bold text-foreground">
-                Consulte a Disponibilidade
-              </h2>
-              <p className="mb-8 text-center text-muted-foreground">
-                Verifique as datas disponíveis antes de solicitar seu agendamento
-              </p>
-              <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl shadow-lg">
-                <CalendarioOcupacao isAdmin={false} />
-              </div>
-            </div>
-          </motion.section>
-        )}
 
         {/* Galeria de Eventos */}
         <GaleriaEventos />
