@@ -4,6 +4,7 @@ export interface DadosSolicitante {
   email: string;
   telefone: string;
   orgao: string;
+  orgaoOutro: string;
 }
 
 export interface DadosEvento {
@@ -56,41 +57,98 @@ export const RECURSOS_AUDITORIO = [
   "Adaptador HDMI/VGA",
 ] as const;
 
-export const SECRETARIAS_MT = [
-  "Casa Civil",
-  "Casa Militar",
-  "Controladoria-Geral do Estado (CGE)",
-  "Gabinete de Comunicação (SECOM)",
-  "Procuradoria-Geral do Estado (PGE)",
-  "Secretaria de Estado de Assistência Social e Cidadania (SETASC)",
-  "Secretaria de Estado de Ciência, Tecnologia e Inovação (SECITECI)",
-  "Secretaria de Estado de Cultura, Esporte e Lazer (SECEL)",
-  "Secretaria de Estado de Desenvolvimento Econômico (SEDEC)",
-  "Secretaria de Estado de Educação (SEDUC)",
-  "Secretaria de Estado de Fazenda (SEFAZ)",
-  "Secretaria de Estado de Infraestrutura e Logística (SINFRA)",
-  "Secretaria de Estado de Meio Ambiente (SEMA)",
-  "Secretaria de Estado de Planejamento e Gestão (SEPLAG)",
-  "Secretaria de Estado de Saúde (SES)",
-  "Secretaria de Estado de Segurança Pública (SESP)",
+export const ORGAOS_POR_CATEGORIA = [
+  {
+    categoria: 'NÍVEL ESTRATÉGICO',
+    orgaos: [
+      'GABGOV / Gabinete do Governador',
+      'VICE-GOV / Gabinete do Vice-Governador',
+      'CASA CIVIL / Casa Civil',
+      'CGE / Controladoria Geral do Estado',
+      'PGE / Procuradoria Geral do Estado',
+      'SECOM / Secretaria de Estado de Comunicação',
+    ],
+  },
+  {
+    categoria: 'GESTÃO, PLANEJAMENTO E ECONOMIA',
+    orgaos: [
+      'SEFAZ / Secretaria de Estado de Fazenda',
+      'SEPLAG / Secretaria de Estado de Planejamento e Gestão',
+      'SEDEC / Secretaria de Estado de Desenvolvimento Econômico',
+    ],
+  },
+  {
+    categoria: 'DESENVOLVIMENTO SOCIAL E CIDADANIA',
+    orgaos: [
+      'SETASC / Secretaria de Estado de Assistência Social e Cidadania',
+      'SECEL / Secretaria de Estado de Cultura, Esporte e Lazer',
+      'SEDUC / Secretaria de Estado de Educação',
+    ],
+  },
+  {
+    categoria: 'SAÚDE',
+    orgaos: [
+      'SES / Secretaria de Estado de Saúde',
+      'MT-HEMOCENTRO / Hemocentro do Estado de Mato Grosso',
+    ],
+  },
+  {
+    categoria: 'INFRAESTRUTURA, MEIO AMBIENTE E PRODUÇÃO',
+    orgaos: [
+      'SEMA / Secretaria de Estado de Meio Ambiente',
+      'SINFRA / Secretaria de Estado de Infraestrutura e Logística',
+      'SEAF / Secretaria de Estado de Agricultura Familiar',
+      'SEDER / Secretaria de Estado de Desenvolvimento Rural',
+    ],
+  },
+  {
+    categoria: 'SEGURANÇA PÚBLICA E JUSTIÇA',
+    orgaos: [
+      'SESP / Secretaria de Estado de Segurança Pública',
+      'SEJUDH / Secretaria de Estado de Justiça e Direitos Humanos',
+      'PMMT / Polícia Militar do Estado de Mato Grosso',
+      'PJC-MT / Polícia Judiciária Civil do Estado de Mato Grosso',
+      'CBM-MT / Corpo de Bombeiros Militar do Estado de Mato Grosso',
+    ],
+  },
+  {
+    categoria: 'ADMINISTRAÇÃO INDIRETA E EXECUÇÃO',
+    orgaos: [
+      'MTI / Empresa Mato-grossense de Tecnologia da Informação',
+      'INTERMAT / Instituto de Terras de Mato Grosso',
+      'DETRAN-MT / Departamento Estadual de Trânsito',
+      'AGER-MT / Agência Estadual de Regulação dos Serviços Públicos Delegados',
+      'INDEA-MT / Instituto de Defesa Agropecuária do Estado de Mato Grosso',
+      'EMPAER / Empresa Mato-grossense de Pesquisa, Assistência e Extensão Rural',
+      'JUCEMAT / Junta Comercial do Estado de Mato Grosso',
+      'IPEM-MT / Instituto de Pesos e Medidas de Mato Grosso',
+      'FUNAC / Fundação Nova Chance',
+    ],
+  },
+  {
+    categoria: 'EDUCAÇÃO SUPERIOR E PESQUISA',
+    orgaos: ['UNEMAT / Universidade do Estado de Mato Grosso'],
+  },
+  {
+    categoria: 'PODER LEGISLATIVO E CONTROLE EXTERNO',
+    orgaos: [
+      'ALMT / Assembleia Legislativa do Estado de Mato Grosso',
+      'TCE-MT / Tribunal de Contas do Estado de Mato Grosso',
+    ],
+  },
+  {
+    categoria: 'PODER JUDICIÁRIO E FUNÇÕES ESSENCIAIS',
+    orgaos: [
+      'TJMT / Tribunal de Justiça do Estado de Mato Grosso',
+      'MP-MT / Ministério Público do Estado de Mato Grosso',
+      'DPE-MT / Defensoria Pública do Estado de Mato Grosso',
+    ],
+  },
+  {
+    categoria: 'Outros',
+    orgaos: ['OUTROS / Especificar outra instituição'],
+  },
 ] as const;
 
-export const ORGAOS_MT = [
-  "SEPLAG",
-  "SEFAZ",
-  "SEDUC",
-  "SES",
-  "SESP",
-  "SINFRA",
-  "SEMA",
-  "SEDEC",
-  "SECITECI",
-  "SECEL",
-  "SETASC",
-  "SECOM",
-  "CGE",
-  "PGE",
-  "Casa Civil",
-  "Casa Militar",
-  "Outro",
-] as const;
+// Flat list for backward compatibility
+export const SECRETARIAS_MT = ORGAOS_POR_CATEGORIA.flatMap(c => c.orgaos);
