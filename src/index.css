@@ -90,10 +90,10 @@
 
 @layer components {
   .seplag-gradient {
-    background: linear-gradient(135deg, hsl(212 100% 26%), hsl(212 100% 18%));
+    background: linear-gradient(135deg, hsl(228 67% 35%), hsl(228 67% 30%));
   }
   .seplag-gradient-light {
-    background: linear-gradient(135deg, hsl(212 80% 40%), hsl(212 100% 26%));
+    background: linear-gradient(135deg, hsl(228 60% 45%), hsl(228 67% 35%));
   }
   .glass-card {
     @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
