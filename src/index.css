@@ -12,10 +12,10 @@
     --card-foreground: 213 50% 15%;
     --popover: 0 0% 100%;
     --popover-foreground: 213 50% 15%;
-    --primary: 212 100% 26%;
+    --primary: 212 100% 23%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 212 80% 40%;
-    --primary-dark: 228 67% 30%;
+    --primary-light: 212 80% 35%;
+    --primary-dark: 212 100% 18%;
     --secondary: 45 100% 51%;
     --secondary-foreground: 213 50% 15%;
     --muted: 210 20% 94%;
@@ -32,11 +32,11 @@
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --sidebar-background: 212 100% 22%;
+    --sidebar-background: 212 100% 23%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 45 100% 51%;
     --sidebar-primary-foreground: 213 50% 15%;
-    --sidebar-accent: 212 80% 30%;
+    --sidebar-accent: 212 100% 28%;
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 212 60% 30%;
     --sidebar-ring: 45 100% 51%;
@@ -90,10 +90,10 @@
 
 @layer components {
   .seplag-gradient {
-    background: linear-gradient(135deg, hsl(228 67% 35%), hsl(228 67% 30%));
+    background: linear-gradient(135deg, hsl(212 100% 28%), hsl(212 100% 23%));
   }
   .seplag-gradient-light {
-    background: linear-gradient(135deg, hsl(228 60% 45%), hsl(228 67% 35%));
+    background: linear-gradient(135deg, hsl(212 100% 33%), hsl(212 100% 28%));
   }
   .glass-card {
     @apply bg-card/80 backdrop-blur-md border border-border/50 shadow-lg;
