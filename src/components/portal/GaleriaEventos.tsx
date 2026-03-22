@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Camera, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface GaleriaItem {
   id: string;
@@ -54,7 +60,7 @@ const GaleriaEventos = () => {
               {fotos.map((foto, i) => (
                 <motion.button
                   key={foto.id}
-                  className="group relative aspect-[4/3] overflow-hidden rounded-2xl shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="group relative aspect-[4/3] cursor-pointer overflow-hidden rounded-2xl shadow-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 hover:opacity-90"
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
@@ -88,68 +94,65 @@ const GaleriaEventos = () => {
         </div>
       </section>
 
-      {/* Lightbox */}
-      <AnimatePresence>
-        {selected !== null && (
-          <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelected(null)}
-          >
-            <button
-              className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              onClick={() => setSelected(null)}
-              aria-label="Fechar"
-            >
-              <X className="h-6 w-6" />
-            </button>
+      {/* Lightbox Dialog */}
+      <Dialog open={selected !== null} onOpenChange={(open) => { if (!open) setSelected(null); }}>
+        <DialogContent className="max-w-[95vw] max-h-[95vh] border-none bg-black/90 p-0 sm:rounded-2xl overflow-hidden [&>button]:text-white [&>button]:hover:bg-white/20">
+          <VisuallyHidden>
+            <DialogTitle>Visualizar foto</DialogTitle>
+          </VisuallyHidden>
 
-            <button
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
-              onClick={(e) => { e.stopPropagation(); navigate(-1); }}
-              aria-label="Foto anterior"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-
-            <button
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
-              onClick={(e) => { e.stopPropagation(); navigate(1); }}
-              aria-label="Próxima foto"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-
-            <motion.div
-              key={selected}
-              className="max-h-[85vh] max-w-[90vw]"
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.92, opacity: 0 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={fotos[selected].imagem_url}
-                alt={fotos[selected].titulo || "Evento"}
-                className="max-h-[85vh] rounded-xl object-contain shadow-2xl"
-              />
-              {fotos[selected].titulo && (
-                <p className="mt-3 text-center text-sm font-medium text-white/80">
-                  {fotos[selected].titulo}
-                  {fotos[selected].subtitulo && (
-                    <span className="ml-2 font-normal text-white/50">
-                      — {fotos[selected].subtitulo}
-                    </span>
-                  )}
-                </p>
+          {selected !== null && (
+            <div className="relative flex items-center justify-center">
+              {/* Nav buttons */}
+              {fotos.length > 1 && (
+                <>
+                  <button
+                    className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
+                    onClick={() => navigate(-1)}
+                    aria-label="Foto anterior"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
+                    onClick={() => navigate(1)}
+                    aria-label="Próxima foto"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
               )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selected}
+                  className="flex flex-col items-center p-4"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <img
+                    src={fotos[selected].imagem_url}
+                    alt={fotos[selected].titulo || "Evento"}
+                    className="max-h-[85vh] max-w-full rounded-xl object-contain shadow-2xl"
+                  />
+                  {fotos[selected].titulo && (
+                    <p className="mt-3 text-center text-sm font-medium text-white/80">
+                      {fotos[selected].titulo}
+                      {fotos[selected].subtitulo && (
+                        <span className="ml-2 font-normal text-white/50">
+                          — {fotos[selected].subtitulo}
+                        </span>
+                      )}
+                    </p>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
