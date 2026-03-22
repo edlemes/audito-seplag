@@ -17,6 +17,7 @@ const steps = ["Solicitante", "Evento", "Documentação"];
 const Agendamento = () => {
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [protocolo, setProtocolo] = useState("");
 
   const [solicitante, setSolicitante] = useState<DadosSolicitante>({
     nome: "", cpf: "", email: "", telefone: "", orgao: "", orgaoOutro: "",
@@ -47,7 +48,7 @@ const Agendamento = () => {
       ? `OUTROS / ${solicitante.orgaoOutro.trim()}`
       : solicitante.orgao;
 
-    const { error } = await supabase.from("solicitacoes_auditorio").insert({
+    const { data, error } = await supabase.from("solicitacoes_auditorio").insert({
       user_id: user?.id || null,
       nome_solicitante: solicitante.nome,
       cpf: solicitante.cpf,
@@ -61,13 +62,15 @@ const Agendamento = () => {
       horario_fim: evento.horarioFim,
       num_participantes: evento.numParticipantes,
       secretaria_atendida: evento.secretariaAtendida,
-    });
+    }).select("id").single();
 
     if (error) {
       console.error('[Agendamento] Submission failed:', error?.code ?? 'unknown');
       toast.error("Erro ao enviar solicitação. Faça login primeiro.");
       return;
     }
+    const idCurto = data.id.split("-")[0].toUpperCase();
+    setProtocolo(`AUD-${idCurto}`);
     setSubmitted(true);
     toast.success("Solicitação enviada com sucesso!");
   };
@@ -81,8 +84,11 @@ const Agendamento = () => {
             <CheckCircle2 className="h-12 w-12 text-success" />
           </div>
           <h2 className="text-2xl font-bold text-foreground">Solicitação Enviada!</h2>
+          <p className="rounded-lg bg-muted px-4 py-2 font-mono text-lg font-semibold text-primary">
+            Protocolo: {protocolo}
+          </p>
           <p className="max-w-md text-muted-foreground">
-            Sua solicitação de agendamento foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
+            Sua solicitação foi registrada. Você receberá a confirmação por e-mail em até 48 horas úteis.
           </p>
 
           {/* Resumo visual */}
