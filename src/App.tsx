@@ -16,7 +16,7 @@ import GestaoUsuarios from "./pages/GestaoUsuarios.tsx";
 import GestaoConteudo from "./pages/GestaoConteudo.tsx";
 import Vistoria from "./pages/Vistoria.tsx";
 import FAQ from "./pages/FAQ.tsx";
-import Inscricao from "./pages/Inscricao.tsx";
+
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -34,7 +34,7 @@ const App = () => (
             <Route path="/orientacoes" element={<Orientacoes />} />
             <Route path="/avaliacao" element={<Avaliacao />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/inscricao" element={<Inscricao />} />
+            
             <Route path="/faq" element={<FAQ />} />
             <Route path="/admin" element={<ProtectedRoute requireAdmin><Admin /></ProtectedRoute>} />
             <Route path="/admin/usuarios" element={<ProtectedRoute requireAdmin><GestaoUsuarios /></ProtectedRoute>} />

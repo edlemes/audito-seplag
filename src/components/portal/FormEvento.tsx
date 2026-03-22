@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { DadosEvento } from "@/types/agendamento";
-import { SECRETARIAS_MT } from "@/types/agendamento";
+import { ORGAOS_POR_CATEGORIA } from "@/types/agendamento";
 import { supabase } from "@/integrations/supabase/client";
 import { AlertTriangle, Lock } from "lucide-react";
 
@@ -28,7 +28,6 @@ const FormEvento = ({ data, onChange }: Props) => {
   const update = (field: keyof DadosEvento, value: string | number) =>
     onChange({ ...data, [field]: value });
 
-  // Check for conflicts and blocked dates when date/time changes
   useEffect(() => {
     if (!data.data) {
       setConflicts([]);
@@ -37,7 +36,6 @@ const FormEvento = ({ data, onChange }: Props) => {
     }
 
     const checkDate = async () => {
-      // Check blocked dates
       const { data: blocked } = await supabase
         .from("blocked_dates")
         .select("motivo")
@@ -53,7 +51,6 @@ const FormEvento = ({ data, onChange }: Props) => {
       setIsBlocked(false);
       setBlockMotivo("");
 
-      // Check time conflicts
       if (data.horarioInicio && data.horarioFim) {
         const { data: existing } = await supabase
           .from("solicitacoes_auditorio")
@@ -106,7 +103,6 @@ const FormEvento = ({ data, onChange }: Props) => {
         </div>
       </div>
 
-      {/* Blocked date warning */}
       {isBlocked && (
         <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
           <Lock className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
@@ -117,7 +113,6 @@ const FormEvento = ({ data, onChange }: Props) => {
         </div>
       )}
 
-      {/* Conflict warning */}
       {conflicts.length > 0 && !isBlocked && (
         <div className="rounded-lg border border-warning/30 bg-warning/10 p-3">
           <div className="flex items-start gap-2">
@@ -148,9 +143,14 @@ const FormEvento = ({ data, onChange }: Props) => {
           <Label>Secretaria Atendida *</Label>
           <Select value={data.secretariaAtendida} onValueChange={(v) => update("secretariaAtendida", v)}>
             <SelectTrigger><SelectValue placeholder="Selecione a secretaria" /></SelectTrigger>
-            <SelectContent>
-              {SECRETARIAS_MT.map((s) => (
-                <SelectItem key={s} value={s}>{s}</SelectItem>
+            <SelectContent className="max-h-80">
+              {ORGAOS_POR_CATEGORIA.map((cat) => (
+                <SelectGroup key={cat.categoria}>
+                  <SelectLabel className="text-xs font-bold uppercase tracking-wider text-primary">{cat.categoria}</SelectLabel>
+                  {cat.orgaos.map((o) => (
+                    <SelectItem key={o} value={o}>{o}</SelectItem>
+                  ))}
+                </SelectGroup>
               ))}
             </SelectContent>
           </Select>

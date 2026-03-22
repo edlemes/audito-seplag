@@ -19,7 +19,7 @@ const Agendamento = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const [solicitante, setSolicitante] = useState<DadosSolicitante>({
-    nome: "", cpf: "", email: "", telefone: "", orgao: "",
+    nome: "", cpf: "", email: "", telefone: "", orgao: "", orgaoOutro: "",
   });
 
   const [evento, setEvento] = useState<DadosEvento>({
@@ -43,13 +43,17 @@ const Agendamento = () => {
       return;
     }
 
+    const orgaoFinal = solicitante.orgao.startsWith("OUTROS") && solicitante.orgaoOutro.trim()
+      ? `OUTROS / ${solicitante.orgaoOutro.trim()}`
+      : solicitante.orgao;
+
     const { error } = await supabase.from("solicitacoes_auditorio").insert({
       user_id: user?.id || null,
       nome_solicitante: solicitante.nome,
       cpf: solicitante.cpf,
       email: solicitante.email,
       telefone: solicitante.telefone,
-      orgao: solicitante.orgao,
+      orgao: orgaoFinal,
       titulo_evento: evento.titulo,
       descricao_evento: evento.descricao,
       data_evento: evento.data,

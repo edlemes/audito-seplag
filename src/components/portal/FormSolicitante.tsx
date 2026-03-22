@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { DadosSolicitante } from "@/types/agendamento";
-import { ORGAOS_MT } from "@/types/agendamento";
+import { ORGAOS_POR_CATEGORIA } from "@/types/agendamento";
 
 interface Props {
   data: DadosSolicitante;
@@ -40,6 +40,8 @@ const isValidCPF = (cpf: string) => {
 };
 
 const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const isOutros = (orgao: string) => orgao.startsWith("OUTROS");
 
 const FormSolicitante = ({ data, onChange }: Props) => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -116,15 +118,39 @@ const FormSolicitante = ({ data, onChange }: Props) => {
 
       <div className="space-y-2">
         <Label>Órgão / Secretaria *</Label>
-        <Select value={data.orgao} onValueChange={(v) => update("orgao", v)}>
+        <Select value={data.orgao} onValueChange={(v) => {
+          update("orgao", v);
+          if (!isOutros(v)) update("orgaoOutro", "");
+        }}>
           <SelectTrigger aria-label="Selecione o órgão"><SelectValue placeholder="Selecione o órgão" /></SelectTrigger>
-          <SelectContent>
-            {ORGAOS_MT.map((o) => (
-              <SelectItem key={o} value={o}>{o}</SelectItem>
+          <SelectContent className="max-h-80">
+            {ORGAOS_POR_CATEGORIA.map((cat) => (
+              <SelectGroup key={cat.categoria}>
+                <SelectLabel className="text-xs font-bold uppercase tracking-wider text-primary">{cat.categoria}</SelectLabel>
+                {cat.orgaos.map((o) => (
+                  <SelectItem key={o} value={o}>{o}</SelectItem>
+                ))}
+              </SelectGroup>
             ))}
           </SelectContent>
         </Select>
       </div>
+
+      {isOutros(data.orgao) && (
+        <div className="space-y-2">
+          <Label htmlFor="orgaoOutro">Especifique a instituição *</Label>
+          <Input
+            id="orgaoOutro"
+            placeholder="Nome da instituição"
+            value={data.orgaoOutro}
+            onChange={(e) => update("orgaoOutro", e.target.value)}
+            onBlur={() => touch("orgaoOutro")}
+          />
+          {touched.orgaoOutro && !data.orgaoOutro.trim() && (
+            <p className="text-xs text-destructive">Especifique a instituição</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
