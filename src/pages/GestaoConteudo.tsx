@@ -328,15 +328,42 @@ const GestaoConteudo = () => {
               {carouselItems.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">Nenhum slide cadastrado.</p>}
             </div>
             <form onSubmit={handleAddCarousel} className="rounded-lg border border-dashed border-border p-4">
-              <p className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground"><Link2 className="h-4 w-4 text-primary" /> Adicionar slide (via link)</p>
+              <p className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground"><Link2 className="h-4 w-4 text-primary" /> Adicionar slide</p>
               <div className="space-y-3">
-                <div><Label className="text-xs">Link da Imagem *</Label><Input value={newUrl} onChange={(e) => setNewUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" /></div>
+                <div>
+                  <Label className="text-xs">Imagem (upload ou link) *</Label>
+                  <div className="mt-1 flex gap-2">
+                    <Input value={newUrl} onChange={(e) => setNewUrl(e.target.value)} placeholder="https://exemplo.com/foto.jpg" className="flex-1" />
+                    <Label htmlFor="carousel-upload" className="cursor-pointer">
+                      <div className="inline-flex h-9 items-center gap-1.5 rounded-md bg-muted px-3 text-xs font-medium text-foreground transition hover:bg-muted/80">
+                        <ImageIcon className="h-4 w-4" /> Upload
+                      </div>
+                    </Label>
+                    <input
+                      id="carousel-upload"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setUploading(true);
+                        const url = await uploadFile(file);
+                        if (url) { setNewUrl(url); toast.success("Imagem enviada!"); }
+                        setUploading(false);
+                        e.target.value = "";
+                      }}
+                      disabled={uploading}
+                    />
+                  </div>
+                  <p className="mt-1 text-[10px] text-muted-foreground">Cole um link ou faça upload de uma imagem do seu computador.</p>
+                </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div><Label className="text-xs">Título</Label><Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Auditório Antônio Mendes" /></div>
                   <div><Label className="text-xs">Subtítulo</Label><Input value={subtitulo} onChange={(e) => setSubtitulo(e.target.value)} placeholder="Ex: Espaço moderno..." /></div>
                 </div>
               </div>
-              <Button type="submit" className="mt-3 gap-2" disabled={uploading}><Plus className="h-4 w-4" />{uploading ? "Salvando..." : "Adicionar Slide"}</Button>
+              <Button type="submit" className="mt-3 gap-2" disabled={uploading || !newUrl.trim()}><Plus className="h-4 w-4" />{uploading ? "Enviando..." : "Adicionar Slide"}</Button>
             </form>
           </div>
 
